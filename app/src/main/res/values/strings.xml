@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AlgoViz</string>
+    <string name="title_activity_path_find">PathFind</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="slider_desc">Slider to control speed of the algorithm</string>
+    <string name="checkBoxLabel">Diagonal</string>
+    <string name="choose_algorithm">Choose Algorithm</string>
+    <string name="start">Start</string>
+    <string name="reset">Reset</string>
+</resources>
