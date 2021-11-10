@@ -9,59 +9,134 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class GridView extends View {
-
-    private int numberOfColumns;
-
-    private int numberOfRows;
 
 
     private boolean showSteps = true;
+
+    private ArrayList<Node> borders, open, closed, path;
 
 
     private final int cellHeight;
     private final int cellWidth = cellHeight = 20;
     private int size = 25;
     private Paint blackPaint = new Paint();
-    private Node node;
-    private APathfinding pathfinding;
 
+
+    private final int numberOfRows = 89;
+//    private final int numberOfRows = Math.round((float) getHeight() / cellHeight);
+
+    private int numberOfColumns = 54;
+
+
+    private final Node[][] node = new Node[numberOfColumns][numberOfRows];
+
+    private Node startNode, endNode, par, currentNode;
 
     public GridView(Context context) {
 
         this(context, null);
 
+
     }
 
     public GridView(Context context, AttributeSet attrs) {
-        super(context, attrs)
-        ;
+        super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        pathfinding = new APathfinding(this, 5);
-    }
-
-    public int getGridHeight() {
-        return getHeight();
-    }
-
-    public int getGridWidth() {
-        return getWidth();
+        borders = new ArrayList<Node>();
+        open = new ArrayList<Node>();
+        closed = new ArrayList<Node>();
+        path = new ArrayList<Node>();
 
     }
 
-    public boolean showSteps() {
-        return showSteps;
+
+    public void addBorder(Node node) {
+        if (borders.size() == 0) {
+            borders.add(node);
+        } else if (!checkBorderDuplicate(node)) {
+            borders.add(node);
+        }
+    }
+
+    public void addOpen(Node node) {
+        if (open.size() == 0) {
+            open.add(node);
+        } else if (!checkOpenDuplicate(node)) {
+            open.add(node);
+        }
+    }
+
+    public void addClosed(Node node) {
+        if (closed.size() == 0) {
+            closed.add(node);
+        } else if (!checkClosedDuplicate(node)) {
+            closed.add(node);
+        }
     }
 
 
-    public int getNumberOfColumns() {
-        return numberOfColumns;
+    public boolean checkBorderDuplicate(Node node) {
+        for (int i = 0; i < borders.size(); i++) {
+            if (node.getX() == borders.get(i).getX() && node.getY() == borders.get(i).getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkOpenDuplicate(Node node) {
+        for (int i = 0; i < open.size(); i++) {
+            if (node.getX() == open.get(i).getX() && node.getY() == open.get(i).getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkClosedDuplicate(Node node) {
+        for (int i = 0; i < closed.size(); i++) {
+            if (node.getX() == closed.get(i).getX() && node.getY() == closed.get(i).getY()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
-    public int getNumberOfRows() {
-        return numberOfRows;
+    public void addPath(Node node) {
+        if (path.size() == 0) {
+            path.add(node);
+        } else {
+            path.add(node);
+        }
+    }
+
+    public void removePath(int location) {
+        path.remove(location);
+    }
+
+    public void removeBorder(int location) {
+        borders.remove(location);
+    }
+
+    public void removeOpen(int location) {
+        open.remove(location);
+    }
+
+    public void removeOpen(Node node) {
+        for (int i = 0; i < open.size(); i++) {
+            if (node.getX() == open.get(i).getX() && node.getY() == open.get(i).getY()) {
+                open.remove(i);
+            }
+        }
+    }
+
+    public void removeClosed(int location) {
+        closed.remove(location);
     }
 
 
@@ -72,6 +147,25 @@ public class GridView extends View {
         calculateDimensions();
     }
 
+    public ArrayList<Node> getBorderList() {
+        return borders;
+    }
+
+    public ArrayList<Node> getOpenList() {
+        return open;
+    }
+
+    public Node getOpen(int location) {
+        return open.get(location);
+    }
+
+    public ArrayList<Node> getClosedList() {
+        return closed;
+    }
+
+    public ArrayList<Node> getPathList() {
+        return path;
+    }
 
 //    private void setNumberOfColumnsAndRows() {
 //
@@ -90,8 +184,9 @@ public class GridView extends View {
 
 
     private void calculateDimensions() {
-        this.numberOfRows = Math.round((float) getHeight() / cellHeight);
-        this.numberOfColumns = Math.round((float) getWidth() / cellWidth);
+
+        Log.d("z", Integer.toString(Math.round((float) getHeight() / cellHeight)));
+        Log.d("x", Integer.toString(Math.round((float) getWidth() / cellWidth)));
 
         if (numberOfColumns < 1 || numberOfRows < 1) {
             return;
@@ -100,12 +195,29 @@ public class GridView extends View {
 
         String currentHeight = Integer.toString(getHeight());
 
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+                node[i][j] = new Node(i, j);
+            }
+        }
 
-        Log.d("currentWidth", currentWidth);
-        Log.d("currentHeight", currentHeight);
-        Log.d("numberOfRows", Integer.toString(numberOfRows));
+        // To fill up the array lists, we can run a for loop and put conditionals to divide them in array lists
+        /*
+        * if(node[x][y].isWall){
+        *   borders.add(node[x][y])
+        * }
+        * Then we can draw it on the canvas
+        *
+        * */
 
-        Log.d("numberOfColumns", Integer.toString(numberOfColumns));
+//        Log.d("node array", Arrays.deepToString(node));
+
+//        Log.d("node array len", Integer.toString(node.length));
+
+
+//        Log.d("currentWidth", currentWidth);
+//        Log.d("currentHeight", currentHeight);
+
 
 //        cellWidth = getWidth() / numberOfColumns;
 //        cellHeight = getHeight() / numberOfRows;
@@ -113,9 +225,9 @@ public class GridView extends View {
         // We need to set cell width and cell height and then find the column and rows.
 
 //        node[numberOfColumns][numberOfRows].setCellChecked(true);
-        node = new Node(numberOfColumns, numberOfRows);
+//        node = new Node(numberOfColumns, numberOfRows);
 
-        Log.d("This is node 2", String.valueOf(node.getX()));
+
         invalidate();
     }
 
@@ -128,29 +240,31 @@ public class GridView extends View {
             return;
         }
 
+        // We can manipulate this one to get what we want
         int width = getWidth();
         int height = getHeight();
 
-//        for (int i = 0; i < numberOfColumns; i++) {
-//            for (int j = 0; j < numberOfRows; j++) {
-//                if (node.getCellChecked()) {
-//                    ArrayList<Node> bordersList = pathfinding.getBorderList();
-////                    if (pathfinding.getBorderList()) {
-//
-//                    // This draws the rectangles that appear when we click on the grid.
-//                    canvas.drawRect(i * cellWidth, j * cellHeight,
-//                            (i + 1) * cellWidth, (j + 1) * cellHeight,
-//                            blackPaint);
-//                }
-//            }
-//
 
-//        }
+        for (int i = 0; i < borders.size(); i++) {
+            canvas.drawRect(
+                    borders.get(i).getX() * cellWidth,
+                    borders.get(i).getY() * cellHeight,
+                    (borders.get(i).getX() + 1) * cellWidth,
+                    (borders.get(i).getY() + 1) * cellHeight,
+                    blackPaint);
 
-        for (int i = 0; i < pathfinding.getBorderList().size(); i++) {
-            canvas.drawRect(pathfinding.getBorderList().get(i).getX() * cellWidth, pathfinding.getBorderList().get(i).getY() * cellHeight, (pathfinding.getBorderList().get(i).getX() + 1) * cellWidth, (pathfinding.getBorderList().get(i).getY() + 1) * cellHeight, blackPaint);
         }
 
+//
+//        for (int i = 0; i < getBorderList().size(); i++) {
+//            canvas.drawRect(
+//                    getBorderList().get(i).getX() * cellWidth,
+//                    getBorderList().get(i).getY() * cellHeight,
+//                    (getBorderList().get(i).getX() + 1) * cellWidth,
+//                    (getBorderList().get(i).getY() + 1) * cellHeight,
+//                    blackPaint);
+//
+//        }
 
         // Here line is being drawn for columns
         for (int i = 1; i < numberOfColumns; i++) {
@@ -163,6 +277,7 @@ public class GridView extends View {
         }
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -171,13 +286,24 @@ public class GridView extends View {
             int row = (int) (event.getY() / cellHeight);
 
 
-//            cellChecked[column][row] = !cellChecked[column][row];
-            Node newBorder = new Node(column, row);
-            pathfinding.addBorder(newBorder);
-            Log.d("currentNode", node.toString());
+            currentNode = new Node(column, row);
+
+            currentNode.setWall(true);
+            borders.add(currentNode);
+
+
+//            Log.d("asdf", Arrays.deepToString(node));
+
+
+
+//            Log.d("numberOfRows", Integer.toString(numberOfRows));
+
+//            Log.d("numberOfColumns", Integer.toString(numberOfColumns));
+
             Log.d("currentColumn", Integer.toString(column));
+            Log.d("NodeX", Integer.toString(node[column][row].getX()));
             Log.d("currentRow", Integer.toString(row));
-            node.setCellChecked(!node.getCellChecked());
+            Log.d("NodeY", Integer.toString(node[column][row].getY()));
             invalidate();
         }
 

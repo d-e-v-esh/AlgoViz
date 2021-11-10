@@ -2,9 +2,11 @@ package com.dev.algoviz;
 
 public class Node {
 
-    private int x, y, g, h, f;
+    private int x, y, g, h, f, weight;
+
     private Node parent;
-    private boolean cellChecked;
+    private boolean isWall, isClosed, isOpen, isPath;
+
 
     public Node(int x, int y) {
         this.x = x;
@@ -20,6 +22,17 @@ public class Node {
     }
 
 
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight){
+        this.weight = weight;
+    }
+
+
+
     public int getG() {
         return g;
     }
@@ -30,6 +43,19 @@ public class Node {
 
     public int getF() {
         return f;
+    }
+
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public void setH(int h) {
+        this.h = h;
+    }
+
+    public void setF(int f) {
+        this.f = f;
     }
 
     public Node getNode() {
@@ -45,26 +71,6 @@ public class Node {
         this.y = y;
     }
 
-    public void setG(int g) {
-        this.g = g;
-    }
-
-    public void setH(int h) {
-        this.h = h;
-    }
-
-    public void setF(int f) {
-        this.f = f;
-    }
-
-
-    public boolean getCellChecked() {
-        return cellChecked;
-    }
-
-    public void setCellChecked(boolean cellChecked) {
-        this.cellChecked = cellChecked;
-    }
 
     public void setParent(Node parent) {
         this.parent = parent;
@@ -77,4 +83,36 @@ public class Node {
         return false;
     }
 
+
+    public boolean isWall() {
+        return isWall;
+    }
+
+    public void setWall(boolean wall) {
+        isWall = wall;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
+    public boolean isPath() {
+        return isPath;
+    }
+
+    public void setPath(boolean path) {
+        isPath = path;
+    }
 }
