@@ -27,7 +27,10 @@ public class GridView extends View {
     private int size = 25;
     public Paint blackPaint = new Paint();
 
+    public Paint greenPaint = new Paint();
 
+
+    public Paint redPaint = new Paint();
     private final int numberOfRows = 89;
 //    private final int numberOfRows = Math.round((float) getHeight() / cellHeight);
 
@@ -39,7 +42,6 @@ public class GridView extends View {
     private Node startNode, endNode, par, currentNode;
 
 
-
     public GridView(Context context) {
         this(context, null);
     }
@@ -47,14 +49,18 @@ public class GridView extends View {
     public GridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        greenPaint.setColor(Color.GREEN);
+
+        redPaint.setColor(Color.RED);
         startNode = new Node(30, 30);
+        endNode = new Node(30, 60);
 
         borders = new ArrayList<Node>();
         open = new ArrayList<Node>();
         closed = new ArrayList<Node>();
         path = new ArrayList<Node>();
     }
-
 
 
     public void addBorder(Node node) {
@@ -64,6 +70,7 @@ public class GridView extends View {
             borders.add(node);
         }
     }
+
 
     public void addOpen(Node node) {
         if (open.size() == 0) {
@@ -85,6 +92,13 @@ public class GridView extends View {
     public boolean checkBorderDuplicate(Node node) {
         for (int i = 0; i < borders.size(); i++) {
             if (node.getX() == borders.get(i).getX() && node.getY() == borders.get(i).getY()) {
+                return true;
+            }
+            if(node.getX()== startNode.getX() && node.getY() == startNode.getY()){
+                return true;
+            }
+
+            if(node.getX()== endNode.getX() && node.getY() == endNode.getY()){
                 return true;
             }
         }
@@ -221,16 +235,23 @@ public class GridView extends View {
 
     public void resetGrid() {
         Log.d("resetGrid", "Reset Functions Ran");
-       borders.clear();
+        borders.clear();
 
         invalidate();
 
     }
 
+
+
+
     @Override
     protected void onDraw(Canvas canvas) {
 
         canvas.drawColor(Color.WHITE);
+
+        // Drawing start and end node
+        canvas.drawRect(startNode.getX() * cellWidth, startNode.getY() * cellWidth, (startNode.getX() + 1) * cellWidth, (startNode.getY() + 1) * cellWidth, greenPaint);
+        canvas.drawRect(endNode.getX() * cellWidth, endNode.getY() * cellWidth, (endNode.getX() + 1) * cellWidth, (endNode.getY() + 1) * cellWidth, redPaint);
 
         Log.d("Borders in onDraw: ", Integer.toString(borders.size()));
         if (numberOfColumns == 0 || numberOfRows == 0) {
@@ -287,7 +308,6 @@ public class GridView extends View {
 //            currentNode.setWall(true);
 
             addBorder(currentNode);
-
 
 
 //            Log.d("numberOfRows", Integer.toString(numberOfRows));
