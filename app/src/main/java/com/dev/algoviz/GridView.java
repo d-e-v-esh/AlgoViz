@@ -14,33 +14,19 @@ import android.widget.Button;
 import java.util.ArrayList;
 
 public class GridView extends View {
-
-
     private boolean showSteps = true;
-
     private ArrayList<Node> borders, open, closed, path;
-
-
     private Button resetButton;
     private final int cellHeight;
     private final int cellWidth = cellHeight = 20;
     private int size = 25;
     public Paint blackPaint = new Paint();
-
     public Paint greenPaint = new Paint();
-
-
     public Paint redPaint = new Paint();
     private final int numberOfRows = 89;
-//    private final int numberOfRows = Math.round((float) getHeight() / cellHeight);
-
     private int numberOfColumns = 54;
-
-
     private final Node[][] node = new Node[numberOfColumns][numberOfRows];
-
     private Node startNode, endNode, par, currentNode;
-
 
     public GridView(Context context) {
         this(context, null);
@@ -62,7 +48,6 @@ public class GridView extends View {
         path = new ArrayList<Node>();
     }
 
-
     public void addBorder(Node node) {
         if (borders.size() == 0) {
             borders.add(node);
@@ -70,7 +55,6 @@ public class GridView extends View {
             borders.add(node);
         }
     }
-
 
     public void addOpen(Node node) {
         if (open.size() == 0) {
@@ -87,7 +71,6 @@ public class GridView extends View {
             closed.add(node);
         }
     }
-
 
     public boolean checkBorderDuplicate(Node node) {
         for (int i = 0; i < borders.size(); i++) {
@@ -123,7 +106,6 @@ public class GridView extends View {
         return false;
     }
 
-
     public void addPath(Node node) {
         if (path.size() == 0) {
             path.add(node);
@@ -155,7 +137,6 @@ public class GridView extends View {
     public void removeClosed(int location) {
         closed.remove(location);
     }
-
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -193,7 +174,6 @@ public class GridView extends View {
             return;
         }
         String currentWidth = Integer.toString(getWidth());
-
         String currentHeight = Integer.toString(getHeight());
 
         for (int i = 0; i < numberOfColumns; i++) {
@@ -202,51 +182,25 @@ public class GridView extends View {
             }
         }
 
-        // To fill up the array lists, we can run a for loop and put conditionals to divide them in array lists
-        /*
+        /* To fill up the array lists, we can run a for loop and put conditionals to divide them in array lists
+         *
          * if(node[x][y].isWall){
          *   borders.add(node[x][y])
          * }
          * Then we can draw it on the canvas
          *
          * */
-
-//        Log.d("node array", Arrays.deepToString(node));
-
-//        Log.d("node array len", Integer.toString(node.length));
-
-
-//        Log.d("currentWidth", currentWidth);
-//        Log.d("currentHeight", currentHeight);
-
-
-//        cellWidth = getWidth() / numberOfColumns;
-//        cellHeight = getHeight() / numberOfRows;
-
-        // We need to set cell width and cell height and then find the column and rows.
-
-//        node[numberOfColumns][numberOfRows].setCellChecked(true);
-//        node = new Node(numberOfColumns, numberOfRows);
-
-
         invalidate();
     }
-
 
     public void resetGrid() {
         Log.d("resetGrid", "Reset Functions Ran");
         borders.clear();
-
         invalidate();
-
     }
-
-
-
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         canvas.drawColor(Color.WHITE);
 
         // Drawing start and end node
@@ -262,7 +216,6 @@ public class GridView extends View {
         int width = getWidth();
         int height = getHeight();
 
-
         for (int i = 0; i < borders.size(); i++) {
             canvas.drawRect(
                     borders.get(i).getX() * cellWidth,
@@ -272,17 +225,6 @@ public class GridView extends View {
                     blackPaint);
 
         }
-
-//
-//        for (int i = 0; i < getBorderList().size(); i++) {
-//            canvas.drawRect(
-//                    getBorderList().get(i).getX() * cellWidth,
-//                    getBorderList().get(i).getY() * cellHeight,
-//                    (getBorderList().get(i).getX() + 1) * cellWidth,
-//                    (getBorderList().get(i).getY() + 1) * cellHeight,
-//                    blackPaint);
-//
-//        }
 
         // Here line is being drawn for columns
         for (int i = 1; i < numberOfColumns; i++) {
@@ -295,52 +237,29 @@ public class GridView extends View {
         }
     }
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
-
             currentNode = new Node(column, row);
 
 //            currentNode.setWall(true);
 
             addBorder(currentNode);
-
-
-//            Log.d("numberOfRows", Integer.toString(numberOfRows));
-
-//            Log.d("numberOfColumns", Integer.toString(numberOfColumns));
-
-//            Log.d("currentColumn", Integer.toString(column));
-//            Log.d("NodeX", Integer.toString(node[column][row].getX()));
-//            Log.d("currentRow", Integer.toString(row));
-//            Log.d("NodeY", Integer.toString(node[column][row].getY()));
             invalidate();
         }
 
         if (event.getAction() == DragEvent.ACTION_DRAG_LOCATION) {
             int column = (int) (event.getX() / cellWidth);
-
             int row = (int) (event.getY() / cellHeight);
-
             currentNode = new Node(column, row);
-
 //            currentNode.setWall(true);
 
             addBorder(currentNode);
             invalidate();
-//            Log.d("currentColumnDrag", Integer.toString(column));
-
-//            Log.d("currentRowDrag", Integer.toString(row));
-
         }
-
-
         return true;
     }
-
-
 }
