@@ -1,5 +1,7 @@
 package com.dev.algoviz;
 
+import android.widget.Button;
+
 public class Node {
 
     private int x, y, g, h, f, weight;

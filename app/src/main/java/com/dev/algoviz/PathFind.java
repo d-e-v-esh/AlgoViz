@@ -1,8 +1,12 @@
 package com.dev.algoviz;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,10 +20,25 @@ public class PathFind extends AppCompatActivity {
     private AutoCompleteTextView algorithmDropdown;
     String[] algorithmsList = {"A*", "Dijkstra's", "BFS", "DFS"};
 
+    private Button resetButton;
+
+    private GridView mGridView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_path_find);
+
+        mGridView = findViewById(R.id.gridView);
+        resetButton = findViewById(R.id.resetButton);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mGridView.resetGrid();
+
+            }
+        });
 
 
         algorithmMenu = findViewById(R.id.algorithmMenu);
