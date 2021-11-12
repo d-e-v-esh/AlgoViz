@@ -25,8 +25,8 @@ public class GridView extends View {
     public Paint redPaint = new Paint();
     private final int numberOfRows = 89;
     private int numberOfColumns = 54;
-    private final Node[][] node = new Node[numberOfColumns][numberOfRows];
-    private Node startNode, endNode, par, currentNode;
+    private final Node[][] grid = new Node[numberOfColumns][numberOfRows];
+    private Node startNode, endNode, par;
 
     public GridView(Context context) {
         this(context, null);
@@ -178,7 +178,7 @@ public class GridView extends View {
 
         for (int i = 0; i < numberOfColumns; i++) {
             for (int j = 0; j < numberOfRows; j++) {
-                node[i][j] = new Node(i, j);
+                grid[i][j] = new Node(i, j);
             }
         }
 
@@ -192,6 +192,12 @@ public class GridView extends View {
          * */
         invalidate();
     }
+
+    public void visualize(){
+        // this method will take the result grid and run a for loop on it and divide all the different nodes in different array lists.
+        // then as those arraylists start to fill up, the onDraw function will draw the colors in the grid.
+    }
+
 
     public void resetGrid() {
         Log.d("resetGrid", "Reset Functions Ran");
@@ -243,21 +249,24 @@ public class GridView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
-            currentNode = new Node(column, row);
 
-//            currentNode.setWall(true);
+            if(column < numberOfColumns && row < numberOfRows){
+                addBorder(grid[column][row]);
+                grid[column][row].setWall(true);
+            }
 
-            addBorder(currentNode);
+
             invalidate();
         }
 
         if (event.getAction() == DragEvent.ACTION_DRAG_LOCATION) {
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
-            currentNode = new Node(column, row);
-//            currentNode.setWall(true);
+            if(column < numberOfColumns && row < numberOfRows){
+                addBorder(grid[column][row]);
+                grid[column][row].setWall(true);
+            }
 
-            addBorder(currentNode);
             invalidate();
         }
         return true;
