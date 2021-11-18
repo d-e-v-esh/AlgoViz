@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
@@ -11,11 +14,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.RequiresApi;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GridView extends View {
     private boolean showSteps = true;
-    private ArrayList<Node> borders, open, closed, path;
+    private ArrayList<Node> borders, open, closed, path, visited;
     private Button resetButton;
     private final int cellHeight;
     private final int cellWidth = cellHeight = 20;
@@ -23,29 +29,59 @@ public class GridView extends View {
     public Paint blackPaint = new Paint();
     public Paint greenPaint = new Paint();
     public Paint redPaint = new Paint();
+
+    public Paint yellowPaint = new Paint();
+    public Paint magentaPaint = new Paint();
     private final int numberOfRows = 89;
     private int numberOfColumns = 54;
-    private final Node[][] grid = new Node[numberOfColumns][numberOfRows];
-    private Node startNode, endNode, par;
+    private Node[][] grid = new Node[numberOfColumns][numberOfRows];
+    int startX, startY, endX, endY;
+    Node startNode, endNode;
+
+    private Dijkstra dijkstra;
+    private String currentAlgorithm;
+
+    final Handler algorithmHandler = new Handler(Looper.getMainLooper());
 
     public GridView(Context context) {
         this(context, null);
     }
 
     public GridView(Context context, AttributeSet attrs) {
+
+
         super(context, attrs);
+
+        startX = 30;
+        startY = 30;
+        endX = 30;
+        endY = 40;
+
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+                grid[i][j] = new Node(i, j);
+            }
+        }
+
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         greenPaint.setColor(Color.GREEN);
+        magentaPaint.setColor(Color.MAGENTA);
 
+        yellowPaint.setColor(Color.YELLOW);
         redPaint.setColor(Color.RED);
-        startNode = new Node(30, 30);
-        endNode = new Node(30, 60);
+//        startNode = new Node(30, 30);
+//        endNode = new Node(30, 60);
 
+        startNode = grid[startX][startY];
+        endNode = grid[endX][endY];
         borders = new ArrayList<Node>();
         open = new ArrayList<Node>();
         closed = new ArrayList<Node>();
         path = new ArrayList<Node>();
+        visited = new ArrayList<Node>();
+
+        dijkstra = new Dijkstra(startNode, endNode, grid);
     }
 
     public void addBorder(Node node) {
@@ -77,11 +113,11 @@ public class GridView extends View {
             if (node.getX() == borders.get(i).getX() && node.getY() == borders.get(i).getY()) {
                 return true;
             }
-            if(node.getX()== startNode.getX() && node.getY() == startNode.getY()){
+            if (node.getX() == startNode.getX() && node.getY() == startNode.getY()) {
                 return true;
             }
 
-            if(node.getX()== endNode.getX() && node.getY() == endNode.getY()){
+            if (node.getX() == endNode.getX() && node.getY() == endNode.getY()) {
                 return true;
             }
         }
@@ -176,11 +212,7 @@ public class GridView extends View {
         String currentWidth = Integer.toString(getWidth());
         String currentHeight = Integer.toString(getHeight());
 
-        for (int i = 0; i < numberOfColumns; i++) {
-            for (int j = 0; j < numberOfRows; j++) {
-                grid[i][j] = new Node(i, j);
-            }
-        }
+
 
         /* To fill up the array lists, we can run a for loop and put conditionals to divide them in array lists
          *
@@ -193,15 +225,125 @@ public class GridView extends View {
         invalidate();
     }
 
-    public void visualize(){
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void visualize() {
+//
+        HashMap<String, ArrayList<Node>> resultHashMap = new HashMap<String, ArrayList<Node>>();//Creating HashMap
+
+
+//        startNode.addEdge();
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+
+                //  If the current node is a wall then we continue
+                if (grid[i][j].isWall()) {
+                    continue;
+                }
+
+                int topX, topY, bottomX, bottomY, rightX, rightY, leftX, leftY;
+
+                rightX = i;
+                rightY = j + 1;
+
+                leftX = i;
+                leftY = j - 1;
+
+                topX = i - 1;
+                topY = j;
+
+                bottomX = i + 1;
+                bottomY = j;
+
+
+                // If current node is not a wall then we add edges to that node.
+//                if (!grid[i][j].isWall()) {
+                    // Checking if node to the right is a wall
+                    if (rightX >= 0 && rightX < numberOfColumns && rightY >= 0 && rightY < numberOfRows) {
+                        if (!grid[rightX][rightY].isWall()) {
+
+                            grid[i][j].addEdge(grid[i][j], grid[rightX][rightY], 1);
+                        }
+                    }
+
+
+                    // Checking if node to the left is a wall
+
+                    if (leftX >= 0 && leftX < numberOfColumns && leftY >= 0 && leftY < numberOfRows) {
+                        if (!grid[i][j - 1].isWall()) {
+                            grid[i][j].addEdge(grid[i][j], grid[leftX][leftY], 1);
+                        }
+                    }
+
+                    // Checking if node to the top is a wall
+                    if (topX >= 0 && topX < numberOfColumns && topY >= 0 && topY < numberOfRows) {
+                        if (!grid[i - 1][j].isWall()) {
+                            grid[i][j].addEdge(grid[i][j], grid[topX][topY], 1);
+                        }
+                    }
+
+                    // Checking if node to the bottom is a wall
+
+                    if (bottomX >= 0 && bottomX < numberOfColumns && bottomY >= 0 && bottomY < numberOfRows) {
+                        if (!grid[i + 1][j].isWall()) {
+                            grid[i][j].addEdge(grid[i][j], grid[bottomX][bottomY], 1);
+                        }
+                    }
+//                }
+
+
+            }
+        }
+
+
+
+        resultHashMap = dijkstra.computePath();
+        path = resultHashMap.get("path");
+        visited = resultHashMap.get("visited");
+
+
+//        for (int i = 0; i < startNode.edges.size(); i++) {
+//
+//
+//
+//        }
+        Log.d("Edges 3030", Integer.toString(grid[30][30].edges.size()));
+        Log.d("Edges startNode", Integer.toString(startNode.edges.size()));
+        for (int i = 0; i < visited.size(); i++) {
+            Log.d("X" + i, Integer.toString(visited.get(i).getX()));
+            Log.d("Y" + i, Integer.toString(visited.get(i).getY()));
+
+
+        }
+
+        invalidate();
+//        for (int i = 0; i < 50; i++) {
+//
+//            int finalI = i;
+//            algorithmHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+////                    Node pathNode = new Node(20, 20 + finalI);
+////                    path.add(pathNode);
+////                    invalidate();
+//
+//                }
+//            }, 100 * i);
+//        }
+
+//        dijkstra.printGrid();
         // this method will take the result grid and run a for loop on it and divide all the different nodes in different array lists.
         // then as those arraylists start to fill up, the onDraw function will draw the colors in the grid.
     }
 
 
     public void resetGrid() {
-        Log.d("resetGrid", "Reset Functions Ran");
         borders.clear();
+        path.clear();
+        open.clear();
+        closed.clear();
+        algorithmHandler.removeCallbacksAndMessages(null);
         invalidate();
     }
 
@@ -213,7 +355,6 @@ public class GridView extends View {
         canvas.drawRect(startNode.getX() * cellWidth, startNode.getY() * cellWidth, (startNode.getX() + 1) * cellWidth, (startNode.getY() + 1) * cellWidth, greenPaint);
         canvas.drawRect(endNode.getX() * cellWidth, endNode.getY() * cellWidth, (endNode.getX() + 1) * cellWidth, (endNode.getY() + 1) * cellWidth, redPaint);
 
-        Log.d("Borders in onDraw: ", Integer.toString(borders.size()));
         if (numberOfColumns == 0 || numberOfRows == 0) {
             return;
         }
@@ -222,6 +363,7 @@ public class GridView extends View {
         int width = getWidth();
         int height = getHeight();
 
+        // Drawing the borders
         for (int i = 0; i < borders.size(); i++) {
             canvas.drawRect(
                     borders.get(i).getX() * cellWidth,
@@ -231,6 +373,34 @@ public class GridView extends View {
                     blackPaint);
 
         }
+
+
+
+
+        for (int i = 0; i < visited.size(); i++) {
+            canvas.drawRect(
+                    visited.get(i).getX() * cellWidth,
+                    visited.get(i).getY() * cellHeight,
+                    (visited.get(i).getX() + 1) * cellWidth,
+                    (visited.get(i).getY() + 1) * cellHeight,
+                    greenPaint);
+
+        }
+
+
+
+        // Drawing the path
+
+        for (int i = 0; i < path.size(); i++) {
+            canvas.drawRect(
+                    path.get(i).getX() * cellWidth,
+                    path.get(i).getY() * cellHeight,
+                    (path.get(i).getX() + 1) * cellWidth,
+                    (path.get(i).getY() + 1) * cellHeight,
+                    magentaPaint);
+
+        }
+
 
         // Here line is being drawn for columns
         for (int i = 1; i < numberOfColumns; i++) {
@@ -250,7 +420,7 @@ public class GridView extends View {
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
 
-            if(column < numberOfColumns && row < numberOfRows){
+            if (column < numberOfColumns && row < numberOfRows) {
                 addBorder(grid[column][row]);
                 grid[column][row].setWall(true);
             }
@@ -262,7 +432,7 @@ public class GridView extends View {
         if (event.getAction() == DragEvent.ACTION_DRAG_LOCATION) {
             int column = (int) (event.getX() / cellWidth);
             int row = (int) (event.getY() / cellHeight);
-            if(column < numberOfColumns && row < numberOfRows){
+            if (column < numberOfColumns && row < numberOfRows) {
                 addBorder(grid[column][row]);
                 grid[column][row].setWall(true);
             }

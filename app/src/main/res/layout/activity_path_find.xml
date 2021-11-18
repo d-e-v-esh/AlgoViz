@@ -64,7 +64,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/statusButton"
+                    android:id="@+id/startButton"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

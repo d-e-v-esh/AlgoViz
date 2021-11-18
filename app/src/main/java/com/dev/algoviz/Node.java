@@ -1,19 +1,26 @@
 package com.dev.algoviz;
 
-import android.widget.Button;
+import java.util.LinkedList;
 
 public class Node {
 
     private int x, y, g, h, f, weight;
 
-    private Node parent;
-    private boolean isWall, isClosed, isOpen, isPath;
-
+    private Node parent, previous;
+    private boolean isWall, isClosed, isOpen, isPath, isVisited;
+    public LinkedList<Edge> edges = new LinkedList<>();
 
     public Node(int x, int y) {
         this.x = x;
         this.y = y;
+        this.setWeight(Integer.MAX_VALUE);
     }
+
+
+    public void addEdge(Node startingPoint, Node endingPoint, int weight) {
+        this.edges.add(new Edge(startingPoint, endingPoint, weight));
+    }
+
 
     public int getX() {
         return x;
@@ -24,15 +31,13 @@ public class Node {
     }
 
 
-
     public int getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight){
+    public void setWeight(int weight) {
         this.weight = weight;
     }
-
 
 
     public int getG() {
@@ -85,6 +90,13 @@ public class Node {
         return false;
     }
 
+    public boolean equals(Node a) {
+        if (this.getX() == a.getX() && this.getY() == a.getY()) {
+            return true;
+        }
+        return false;
+    }
+
 
     public boolean isWall() {
         return isWall;
@@ -117,4 +129,21 @@ public class Node {
     public void setPath(boolean path) {
         isPath = path;
     }
+
+    public Node getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(Node previous) {
+        this.previous = previous;
+    }
+
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setVisited(boolean visited) {
+        isVisited = visited;
+    }
+
 }
