@@ -32,18 +32,14 @@ public class Dijkstra implements PathfindingAlgorithm {
 
     Node startNode, endNode;
 
-    PriorityQueue<Node> priorityQueue = new PriorityQueue<>();
     //    Node[] nodesVisitedOrder = new Node[54 * 89];
-    ArrayList<Node> nodesVisitedOrder = new ArrayList<Node>();
 
     ArrayList<Node> neighbours = new ArrayList<Node>();
     ArrayList<Node> path = new ArrayList<Node>();
 
     ArrayList<Node> visited = new ArrayList<Node>();
     private Node[][] grid = new Node[54][89];
-    Comparator<Node> nodeComparator = new NodeComparator();
     private GridView gridView;
-    HashMap<String, ArrayList<Node>> resultHashMap = new HashMap<String, ArrayList<Node>>();//Creating HashMap
 
     ArrayList<Node> unvisitedNodes = new ArrayList<Node>();
 
@@ -81,71 +77,7 @@ public class Dijkstra implements PathfindingAlgorithm {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public HashMap<String, ArrayList<Node>> computePath() {
-        startNode.setWeight(0);
-        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodeComparator);
 
-        priorityQueue.add(startNode);
-
-        while (!priorityQueue.isEmpty()) {
-            Node closestNode = priorityQueue.poll();
-
-            closestNode.setVisited(true);
-            visited.add(closestNode);
-
-
-            if(!closestNode.equals(startNode) && !closestNode.equals(endNode)){
-                nodesVisitedOrder.add(closestNode);
-            }
-
-            for(int i = 0; i < closestNode.edges.size(); i++ ){
-
-                Edge currentEdge = closestNode.edges.get(i);
-                Node currentNeighbour = currentEdge.endingPoint;
-                if(!currentNeighbour.isVisited()){
-                    if(currentNeighbour.getWeight() > closestNode.getWeight() + currentEdge.weight){
-                        currentNeighbour.setWeight(closestNode.getWeight()+ currentEdge.weight);
-                        currentNeighbour.setParent(closestNode);
-                        priorityQueue.remove(currentNeighbour);
-                        priorityQueue.add(currentNeighbour);
-                    }
-
-                }
-            }
-
-
-
-
-        }
-
-        Node currentNode = endNode;
-
-        while(currentNode != null ){
-            path.add(currentNode);
-            currentNode = currentNode.getParent();
-        }
-
-
-
-        for(int i = 0; i< priorityQueue.size(); i++){
-            Log.d( "Q", Integer.toString(priorityQueue.size()));
-        }
-
-        resultHashMap.put("nodesVisitedOrder", nodesVisitedOrder);
-        resultHashMap.put("path", path);
-
-        resultHashMap.put("visited", visited);
-
-
-
-
-
-
-        return resultHashMap;
-
-
-    }
 
 
 

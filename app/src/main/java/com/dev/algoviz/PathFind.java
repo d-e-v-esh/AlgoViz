@@ -51,7 +51,7 @@ public class PathFind extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                mGridView.visualize();
+                mGridView.visualizeDijkstra();
 
             }
         });

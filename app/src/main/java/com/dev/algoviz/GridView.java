@@ -17,7 +17,9 @@ import android.widget.Button;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class GridView extends View {
     private boolean showSteps = true;
@@ -38,7 +40,14 @@ public class GridView extends View {
     int startX, startY, endX, endY;
     Node startNode, endNode;
 
-    private Dijkstra dijkstra;
+
+    PriorityQueue<Node> priorityQueue = new PriorityQueue<>();
+
+    HashMap<String, ArrayList<Node>> resultHashMap = new HashMap<String, ArrayList<Node>>();//Creating HashMap
+    ArrayList<Node> nodesVisitedOrder = new ArrayList<Node>();
+    Comparator<Node> nodeComparator = new NodeComparator();
+
+
     private String currentAlgorithm;
 
     final Handler algorithmHandler = new Handler(Looper.getMainLooper());
@@ -81,7 +90,6 @@ public class GridView extends View {
         path = new ArrayList<Node>();
         visited = new ArrayList<Node>();
 
-        dijkstra = new Dijkstra(startNode, endNode, grid);
     }
 
     public void addBorder(Node node) {
@@ -225,14 +233,61 @@ public class GridView extends View {
         invalidate();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void visualizeDijkstra() {
+        joinAdjacentNodes();
+        startNode.setWeight(0);
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodeComparator);
+
+        priorityQueue.add(startNode);
+
+        while (!priorityQueue.isEmpty()) {
+            Node closestNode = priorityQueue.poll();
+
+            closestNode.setVisited(true);
+            visited.add(closestNode);
+
+
+            if (!closestNode.equals(startNode) && !closestNode.equals(endNode)) {
+                nodesVisitedOrder.add(closestNode);
+            }
+
+            for (int i = 0; i < closestNode.edges.size(); i++) {
+
+                Edge currentEdge = closestNode.edges.get(i);
+                Node currentNeighbour = currentEdge.endingPoint;
+                if (!currentNeighbour.isVisited()) {
+                    if (currentNeighbour.getWeight() > closestNode.getWeight() + currentEdge.weight) {
+                        currentNeighbour.setWeight(closestNode.getWeight() + currentEdge.weight);
+                        currentNeighbour.setParent(closestNode);
+                        priorityQueue.remove(currentNeighbour);
+                        priorityQueue.add(currentNeighbour);
+                    }
+
+                }
+            }
+
+        }
+
+        Node currentNode = endNode;
+
+        while (currentNode != null) {
+            path.add(currentNode);
+            currentNode = currentNode.getParent();
+        }
+
+
+        for (int i = 0; i < priorityQueue.size(); i++) {
+            Log.d("Q", Integer.toString(priorityQueue.size()));
+        }
+
+
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void visualize() {
+    public void joinAdjacentNodes() {
 //
-        HashMap<String, ArrayList<Node>> resultHashMap = new HashMap<String, ArrayList<Node>>();//Creating HashMap
-
-
-//        startNode.addEdge();
         for (int i = 0; i < numberOfColumns; i++) {
             for (int j = 0; j < numberOfRows; j++) {
 
@@ -254,87 +309,42 @@ public class GridView extends View {
 
                 bottomX = i + 1;
                 bottomY = j;
-
-
                 // If current node is not a wall then we add edges to that node.
-//                if (!grid[i][j].isWall()) {
-                    // Checking if node to the right is a wall
-                    if (rightX >= 0 && rightX < numberOfColumns && rightY >= 0 && rightY < numberOfRows) {
-                        if (!grid[rightX][rightY].isWall()) {
+                // Checking if node to the right is a wall
+                if (rightX >= 0 && rightX < numberOfColumns && rightY >= 0 && rightY < numberOfRows) {
+                    if (!grid[rightX][rightY].isWall()) {
 
-                            grid[i][j].addEdge(grid[i][j], grid[rightX][rightY], 1);
-                        }
+                        grid[i][j].addEdge(grid[i][j], grid[rightX][rightY], 1);
                     }
+                }
 
 
-                    // Checking if node to the left is a wall
+                // Checking if node to the left is a wall
 
-                    if (leftX >= 0 && leftX < numberOfColumns && leftY >= 0 && leftY < numberOfRows) {
-                        if (!grid[i][j - 1].isWall()) {
-                            grid[i][j].addEdge(grid[i][j], grid[leftX][leftY], 1);
-                        }
+                if (leftX >= 0 && leftX < numberOfColumns && leftY >= 0 && leftY < numberOfRows) {
+                    if (!grid[i][j - 1].isWall()) {
+                        grid[i][j].addEdge(grid[i][j], grid[leftX][leftY], 1);
                     }
+                }
 
-                    // Checking if node to the top is a wall
-                    if (topX >= 0 && topX < numberOfColumns && topY >= 0 && topY < numberOfRows) {
-                        if (!grid[i - 1][j].isWall()) {
-                            grid[i][j].addEdge(grid[i][j], grid[topX][topY], 1);
-                        }
+                // Checking if node to the top is a wall
+                if (topX >= 0 && topX < numberOfColumns && topY >= 0 && topY < numberOfRows) {
+                    if (!grid[i - 1][j].isWall()) {
+                        grid[i][j].addEdge(grid[i][j], grid[topX][topY], 1);
                     }
+                }
 
-                    // Checking if node to the bottom is a wall
+                // Checking if node to the bottom is a wall
 
-                    if (bottomX >= 0 && bottomX < numberOfColumns && bottomY >= 0 && bottomY < numberOfRows) {
-                        if (!grid[i + 1][j].isWall()) {
-                            grid[i][j].addEdge(grid[i][j], grid[bottomX][bottomY], 1);
-                        }
+                if (bottomX >= 0 && bottomX < numberOfColumns && bottomY >= 0 && bottomY < numberOfRows) {
+                    if (!grid[i + 1][j].isWall()) {
+                        grid[i][j].addEdge(grid[i][j], grid[bottomX][bottomY], 1);
                     }
-//                }
-
-
+                }
             }
         }
 
-
-
-        resultHashMap = dijkstra.computePath();
-        path = resultHashMap.get("path");
-        visited = resultHashMap.get("visited");
-
-
-//        for (int i = 0; i < startNode.edges.size(); i++) {
-//
-//
-//
-//        }
-        Log.d("Edges 3030", Integer.toString(grid[30][30].edges.size()));
-        Log.d("Edges startNode", Integer.toString(startNode.edges.size()));
-        for (int i = 0; i < visited.size(); i++) {
-            Log.d("X" + i, Integer.toString(visited.get(i).getX()));
-            Log.d("Y" + i, Integer.toString(visited.get(i).getY()));
-
-
-        }
-
         invalidate();
-//        for (int i = 0; i < 50; i++) {
-//
-//            int finalI = i;
-//            algorithmHandler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-////                    Node pathNode = new Node(20, 20 + finalI);
-////                    path.add(pathNode);
-////                    invalidate();
-//
-//                }
-//            }, 100 * i);
-//        }
-
-//        dijkstra.printGrid();
-        // this method will take the result grid and run a for loop on it and divide all the different nodes in different array lists.
-        // then as those arraylists start to fill up, the onDraw function will draw the colors in the grid.
     }
 
 
@@ -375,8 +385,6 @@ public class GridView extends View {
         }
 
 
-
-
         for (int i = 0; i < visited.size(); i++) {
             canvas.drawRect(
                     visited.get(i).getX() * cellWidth,
@@ -386,7 +394,6 @@ public class GridView extends View {
                     greenPaint);
 
         }
-
 
 
         // Drawing the path
