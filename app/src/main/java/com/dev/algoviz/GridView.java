@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class GridView extends View {
     private boolean showSteps = true;
@@ -39,6 +41,8 @@ public class GridView extends View {
     private Node[][] grid = new Node[numberOfColumns][numberOfRows];
     int startX, startY, endX, endY;
     Node startNode, endNode;
+    private boolean diagonal;
+    public int speedMultiplier = 1;
 
 
     PriorityQueue<Node> priorityQueue = new PriorityQueue<>();
@@ -46,14 +50,14 @@ public class GridView extends View {
     HashMap<String, ArrayList<Node>> resultHashMap = new HashMap<String, ArrayList<Node>>();//Creating HashMap
     ArrayList<Node> nodesVisitedOrder = new ArrayList<Node>();
     Comparator<Node> nodeComparator = new NodeComparator();
-
+    private final Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
 
     private String currentAlgorithm;
 
     final Handler algorithmHandler = new Handler(Looper.getMainLooper());
 
     public GridView(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public GridView(Context context, AttributeSet attrs) {
@@ -64,7 +68,7 @@ public class GridView extends View {
         startX = 30;
         startY = 30;
         endX = 30;
-        endY = 40;
+        endY = 75;
 
         for (int i = 0; i < numberOfColumns; i++) {
             for (int j = 0; j < numberOfRows; j++) {
@@ -90,6 +94,11 @@ public class GridView extends View {
         path = new ArrayList<Node>();
         visited = new ArrayList<Node>();
 
+    }
+
+
+    public void setDiagonal(boolean diagonal) {
+        this.diagonal = diagonal;
     }
 
     public void addBorder(Node node) {
@@ -235,57 +244,116 @@ public class GridView extends View {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void visualizeDijkstra() {
-        joinAdjacentNodes();
-        startNode.setWeight(0);
-        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodeComparator);
 
-        priorityQueue.add(startNode);
-
-        while (!priorityQueue.isEmpty()) {
-            Node closestNode = priorityQueue.poll();
-
-            closestNode.setVisited(true);
-            visited.add(closestNode);
+        executor.execute(() -> {
 
 
-            if (!closestNode.equals(startNode) && !closestNode.equals(endNode)) {
-                nodesVisitedOrder.add(closestNode);
+            joinAdjacentNodes();
+
+
+            if (diagonal) {
+                joinDiagonalNodes();
             }
+            startNode.setWeight(0);
+            PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodeComparator);
 
-            for (int i = 0; i < closestNode.edges.size(); i++) {
+            priorityQueue.add(startNode);
 
-                Edge currentEdge = closestNode.edges.get(i);
-                Node currentNeighbour = currentEdge.endingPoint;
-                if (!currentNeighbour.isVisited()) {
-                    if (currentNeighbour.getWeight() > closestNode.getWeight() + currentEdge.weight) {
-                        currentNeighbour.setWeight(closestNode.getWeight() + currentEdge.weight);
-                        currentNeighbour.setParent(closestNode);
-                        priorityQueue.remove(currentNeighbour);
-                        priorityQueue.add(currentNeighbour);
-                    }
+            while (!priorityQueue.isEmpty()) {
+                Node closestNode = priorityQueue.poll();
 
+                closestNode.setVisited(true);
+                visited.add(closestNode);
+                closestNode.setVisited(true);
+
+                try {
+                    Thread.sleep(speedMultiplier);
+                    invalidate();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+//                if (!closestNode.equals(startNode) && !closestNode.equals(endNode)) {
+//                    nodesVisitedOrder.add(closestNode);
+//                }
+
+
+                if (closestNode.equals(endNode)) {
+                    break;
+                }
+
+                for (int i = 0; i < closestNode.edges.size(); i++) {
+
+                    Edge currentEdge = closestNode.edges.get(i);
+                    Node currentNeighbour = currentEdge.endingPoint;
+                    if (!currentNeighbour.isVisited()) {
+
+
+                        if (currentNeighbour.getWeight() > closestNode.getWeight() + currentEdge.weight) {
+                            currentNeighbour.setWeight(closestNode.getWeight() + currentEdge.weight);
+                            currentNeighbour.setParent(closestNode);
+                            priorityQueue.remove(currentNeighbour);
+                            priorityQueue.add(currentNeighbour);
+                        }
+
+                    }
+                }
+
             }
 
-        }
+            Node currentNode = endNode;
 
-        Node currentNode = endNode;
-
-        while (currentNode != null) {
-            path.add(currentNode);
-            currentNode = currentNode.getParent();
-        }
+            while (currentNode != null) {
+//                path.add(currentNode);
 
 
-        for (int i = 0; i < priorityQueue.size(); i++) {
-            Log.d("Q", Integer.toString(priorityQueue.size()));
-        }
+                currentNode.setPath(true);
+                addPath(currentNode);
 
+
+                currentNode = currentNode.getParent();
+
+
+                try {
+                    Thread.sleep(30);
+                    invalidate();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            algorithmHandler.post(() -> {
+
+//                for (int i = 0; i < numberOfColumns; i++) {
+//                    for (int j = 0; j < numberOfRows; j++) {
+//
+//
+//                        if (grid[i][j].isPath()) {
+//
+//
+//                            addPath(grid[i][j]);
+//
+//                            invalidate();
+//
+//                        }
+//                        if (grid[i][j].isVisited()) {
+//                            visited.add(grid[i][j]);
+//
+//                            invalidate();
+//
+//                        }
+//                    }
+//                }
+
+//                invalidate();
+            });
+        });
 
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void joinAdjacentNodes() {
 //
         for (int i = 0; i < numberOfColumns; i++) {
@@ -344,21 +412,91 @@ public class GridView extends View {
             }
         }
 
-        invalidate();
     }
 
 
+    public void joinDiagonalNodes() {
+//
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+
+                //  If the current node is a wall then we continue
+                if (grid[i][j].isWall()) {
+                    continue;
+                }
+
+                int topRightX, topRightY, topLeftX, topLeftY, bottomLeftX, bottomLeftY, bottomRightX, bottomRightY;
+
+                topRightX = i + 1;
+                topRightY = j + 1;
+
+                topLeftX = i - 1;
+                topLeftY = j + 1;
+
+                bottomLeftX = i - 1;
+                bottomLeftY = j - 1;
+
+                bottomRightX = i + 1;
+                bottomRightY = j - 1;
+                // If current node is not a wall then we add edges to that node.
+                // Checking if node to the right is a wall
+                if (topRightX >= 0 && topRightX < numberOfColumns && topRightY >= 0 && topRightY < numberOfRows) {
+                    if (!grid[topRightX][topRightY].isWall()) {
+
+                        grid[i][j].addEdge(grid[i][j], grid[topRightX][topLeftY], 1);
+                    }
+                }
+
+
+                // Checking if node to the left is a wall
+
+                if (topLeftX >= 0 && topLeftX < numberOfColumns && topLeftY >= 0 && topLeftY < numberOfRows) {
+                    if (!grid[topLeftX][topLeftY].isWall()) {
+                        grid[i][j].addEdge(grid[i][j], grid[topLeftX][topLeftY], 1);
+                    }
+                }
+
+                // Checking if node to the top is a wall
+                if (bottomLeftX >= 0 && bottomLeftX < numberOfColumns && bottomLeftY >= 0 && bottomLeftY < numberOfRows) {
+                    if (!grid[bottomLeftX][bottomLeftY].isWall()) {
+                        grid[i][j].addEdge(grid[i][j], grid[bottomLeftX][bottomLeftY], 1);
+                    }
+                }
+
+
+                // Checking if node to the bottom is a wall
+                if (bottomRightX >= 0 && bottomRightX < numberOfColumns && bottomRightY >= 0 && bottomRightY < numberOfRows) {
+                    if (!grid[bottomRightX][bottomRightY].isWall()) {
+
+                        grid[i][j].addEdge(grid[i][j], grid[bottomRightX][bottomRightY], 1);
+                    }
+                }
+            }
+        }
+
+    }
+
     public void resetGrid() {
+
+//        joinAdjacentNodes();
+        for (int i = 0; i < numberOfColumns; i++) {
+            for (int j = 0; j < numberOfRows; j++) {
+                grid[i][j].resetNode();
+            }
+        }
+
         borders.clear();
+        visited.clear();
         path.clear();
         open.clear();
         closed.clear();
-        algorithmHandler.removeCallbacksAndMessages(null);
+//        algorithmHandler.removeCallbacksAndMessages(null);
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d("isDiagonal", Boolean.toString(diagonal));
         canvas.drawColor(Color.WHITE);
 
         // Drawing start and end node
@@ -386,6 +524,7 @@ public class GridView extends View {
 
 
         for (int i = 0; i < visited.size(); i++) {
+
             canvas.drawRect(
                     visited.get(i).getX() * cellWidth,
                     visited.get(i).getY() * cellHeight,
@@ -448,4 +587,6 @@ public class GridView extends View {
         }
         return true;
     }
+
+
 }

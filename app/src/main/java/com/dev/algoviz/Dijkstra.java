@@ -16,6 +16,7 @@ package com.dev.algoviz;
  *
  * */
 
+import android.graphics.Canvas;
 import android.os.Build;
 import android.util.Log;
 
@@ -28,7 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Dijkstra implements PathfindingAlgorithm {
+public class Dijkstra {
+
 
     Node startNode, endNode;
 
@@ -51,6 +53,7 @@ public class Dijkstra implements PathfindingAlgorithm {
 
 
     }
+
 
     public void print2d(Node[][] grid) {
         // Loop through all rows

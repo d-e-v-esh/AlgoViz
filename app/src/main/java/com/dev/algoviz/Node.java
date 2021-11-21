@@ -8,7 +8,7 @@ public class Node {
 
     private Node parent, previous;
     private boolean isWall, isClosed, isOpen, isPath, isVisited;
-    public LinkedList<Edge> edges = new LinkedList<>();
+    public LinkedList<Edge> edges = new LinkedList<Edge>();
 
     public Node(int x, int y) {
         this.x = x;
@@ -97,6 +97,17 @@ public class Node {
         return false;
     }
 
+    public void resetNode() {
+        this.parent = null;
+        this.previous = null;
+        this.edges.clear();
+        this.setWeight(Integer.MAX_VALUE);
+       
+        isWall = false;
+        isVisited = false;
+        isPath = false;
+
+    }
 
     public boolean isWall() {
         return isWall;
