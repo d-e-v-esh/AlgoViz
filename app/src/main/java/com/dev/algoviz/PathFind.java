@@ -40,7 +40,8 @@ public class PathFind extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onStop();
-                mGridView.resetGrid();
+//                mGridView.resetGrid();
+
                 mGridView.invalidate();
 
             }
@@ -50,7 +51,7 @@ public class PathFind extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                mGridView.visualizeDijkstra();
+//                mGridView.visualizeDijkstra();
 
             }
         });
@@ -63,7 +64,7 @@ public class PathFind extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                updateDiagonalCheckBox(buttonView.isChecked());
+//                updateDiagonalCheckBox(buttonView.isChecked());
 
             }
         });
@@ -84,13 +85,5 @@ public class PathFind extends AppCompatActivity {
     }
 
 
-    private void updateDiagonalCheckBox(Boolean isChecked) {
-        if (isChecked) {
-            mGridView.setDiagonal(true);
-            Log.d("PathFind Diagonal", Boolean.toString(diagonalCheck.isChecked()));
-        } else {
 
-            mGridView.setDiagonal(false);
-        }
-    }
 }
