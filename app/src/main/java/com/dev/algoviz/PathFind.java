@@ -21,17 +21,24 @@ public class PathFind extends AppCompatActivity {
 
     private TextInputLayout algorithmMenu;
     private AutoCompleteTextView algorithmDropdown;
-    String[] algorithmsList = {"A*", "Dijkstra's", "BFS", "DFS"};
-    GridView mGridView;
+    String[] algorithmsList = {"BFS", "Dijkstra's", "GBFS", "A*"};
     CheckBox diagonalCheck;
+//    public GridView gridView;
+
+    public CanvasAdapter canvasAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_path_find);
 
-//        GridView mGridView = new GridView(this);
-        mGridView = findViewById(R.id.gridView);
+        canvasAdapter = new CanvasAdapter(this);
+
+        Grid canvasGrid = canvasAdapter.getGrid();
+        Log.d("canvasGridHEgiht", Integer.toString(canvasGrid.getHeight()));
+//        gridView = findViewById(R.id.gridView);
+
+        setContentView(R.layout.activity_path_find);
         Button resetButton = findViewById(R.id.resetButton);
         Button startButton = findViewById(R.id.startButton);
         diagonalCheck = findViewById(R.id.diagonalCheck);
@@ -40,10 +47,6 @@ public class PathFind extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onStop();
-//                mGridView.resetGrid();
-
-                mGridView.invalidate();
-
             }
         });
 
@@ -51,39 +54,29 @@ public class PathFind extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-//                mGridView.visualizeDijkstra();
-
             }
         });
-
-//        mGridView.diagonal = diagonalCheck.isChecked();
 
         Boolean isDiagonalChecked = diagonalCheck.isChecked();
 
         diagonalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
 //                updateDiagonalCheckBox(buttonView.isChecked());
-
             }
         });
 
-
         // Here we can say, if dijkstra is selected and start is pressed,
-
         algorithmMenu = findViewById(R.id.algorithmMenu);
-
         algorithmDropdown = findViewById(R.id.algorithm_dropdown);
-
         ArrayAdapter<String> algoArrayAdapter = new ArrayAdapter<>(
                 PathFind.this, R.layout.algorithms_dropdown, algorithmsList
         );
-
-
         algorithmDropdown.setAdapter(algoArrayAdapter);
     }
 
-
+    private enum ProgramState {
+        Editing, Searching_AnimNotStarted, Searching_AnimStarted, Done
+    }
 
 }

@@ -3,42 +3,26 @@ package com.dev.algoviz;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import com.dev.algoviz.algorithms.IAlgorithmListener;
 import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
-import com.dev.algoviz.graph.Node;
 
 public class GridView extends View {
-    private Button resetButton;
-    private IGraphSearchAlgorithm algorithm;
     private Grid grid;
-
+    private IGraphSearchAlgorithm algorithm;
     private TouchOperation touchOperation = TouchOperation.None;
 
-    Node startNode, endNode;
-    private boolean diagonal;
-
-
-    public GridView(Context context) {
-        super(context);
-    }
-
+    //    public gridview(context context) {
+//        super(context);
+//    }
     public GridView(Context context, AttributeSet attrs) {
-
-
         super(context, attrs);
-
-
-        grid = new Grid(20, 20);
-
-
-
+//        grid = new Grid(20, 20);
     }
 
     /**
@@ -48,6 +32,8 @@ public class GridView extends View {
      * @param grid the maze to display.
      */
     public void setGrid(Grid grid) {
+        Log.d("setGrid", "1");
+        Log.d("setGrid", Integer.toString(grid.getHeight()));
         if (this.grid != null) {
             this.grid.removeMazeListener(gridListener);
         }
@@ -56,6 +42,8 @@ public class GridView extends View {
             this.grid.addMazeListener(gridListener);
         }
         invalidate();
+        Log.d("setGrid  this  ", Integer.toString(this.grid.getHeight()));
+        Log.d("setGrid", "2");
     }
 
     /**
@@ -77,6 +65,7 @@ public class GridView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
@@ -112,11 +101,20 @@ public class GridView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        DrawGrid.drawGridBackground(this.grid, canvas);
-        if (algorithm != null) {
+
+        Log.d("setGrid", "3");
+        super.onDraw(canvas);
+
+
+//        Log.d("this.grid h in onDraw", Integer.toString(grid.getHeight()));
+//        Log.d("asdfasdf", "asdfasdf");
+        if (grid != null) {
+            DrawGrid.drawGridBackground(this.grid, canvas);
+            if (algorithm != null) {
 //            .paintAlgorithm(this.algorithm, g);
+            }
+            DrawGrid.drawForeground(this.grid, canvas);
         }
-        DrawGrid.drawForeground(this.grid, canvas);
     }
 
 
@@ -159,7 +157,7 @@ public class GridView extends View {
 
 
     // A listener which responds to maze change events by causing a repaint of this panel.
-    private final IGridListener gridListener = maze -> invalidate();
+    private final IGridListener gridListener = grid -> invalidate();
 
     // A listener which responds to algorithm change events by causing a repaint of this panel.
     private final IAlgorithmListener algListener = alg -> invalidate();

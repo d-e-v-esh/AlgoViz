@@ -6,7 +6,7 @@ import android.graphics.Paint;
 
 public class DrawGrid {
 
-    public static final int cellWidth = 20, cellHeight = 20;
+    public static final int cellWidth = 50, cellHeight = 50;
     public static Paint greenPaint = new Paint();
     public static Paint redPaint = new Paint();
     public static Paint whitePaint = new Paint();
