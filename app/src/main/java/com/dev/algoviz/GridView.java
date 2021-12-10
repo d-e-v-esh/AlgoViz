@@ -17,12 +17,12 @@ public class GridView extends View {
     private IGraphSearchAlgorithm algorithm;
     private TouchOperation touchOperation = TouchOperation.None;
 
-    //    public gridview(context context) {
-//        super(context);
-//    }
+    public GridView(Context context) {
+        super(context);
+    }
+
     public GridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        grid = new Grid(20, 20);
     }
 
     /**

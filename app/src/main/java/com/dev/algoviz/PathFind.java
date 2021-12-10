@@ -2,7 +2,6 @@ package com.dev.algoviz;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -23,22 +22,16 @@ public class PathFind extends AppCompatActivity {
     private AutoCompleteTextView algorithmDropdown;
     String[] algorithmsList = {"BFS", "Dijkstra's", "GBFS", "A*"};
     CheckBox diagonalCheck;
-//    public GridView gridView;
-
-    public CanvasAdapter canvasAdapter;
+    public GridView gridView;
+    Grid grid;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        canvasAdapter = new CanvasAdapter(this);
-
-        Grid canvasGrid = canvasAdapter.getGrid();
-        Log.d("canvasGridHEgiht", Integer.toString(canvasGrid.getHeight()));
-//        gridView = findViewById(R.id.gridView);
-
         setContentView(R.layout.activity_path_find);
+
         Button resetButton = findViewById(R.id.resetButton);
         Button startButton = findViewById(R.id.startButton);
         diagonalCheck = findViewById(R.id.diagonalCheck);
@@ -77,6 +70,15 @@ public class PathFind extends AppCompatActivity {
 
     private enum ProgramState {
         Editing, Searching_AnimNotStarted, Searching_AnimStarted, Done
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        grid = new Grid(20, 20);
+        gridView = (GridView) findViewById(R.id.gridView);
+        gridView.setGrid(grid);
     }
 
 }
