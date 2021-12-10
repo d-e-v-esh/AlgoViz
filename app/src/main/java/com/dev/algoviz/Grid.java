@@ -1,7 +1,5 @@
 package com.dev.algoviz;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class Grid {
             }
         }
 
-        this.startPoint = new Point(0, 0);
+        this.startPoint = new Point(2, 2);
         this.goalPoint = new Point(width - 1, height - 1);
 
         fireMazeChanged();
@@ -120,7 +118,6 @@ public class Grid {
     public boolean isBlockWall(Point blockCoordinates) {
         if (blockCoordinates.getX() <= this.width && blockCoordinates.getY() <= this.height) {
             if (this.tiles[blockCoordinates.getX()][blockCoordinates.getY()] == TileTypes.Wall) {
-                Log.d("isWall", "It is a wall");
                 return true;
             }
         }

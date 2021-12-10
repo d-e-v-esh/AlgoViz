@@ -1,7 +1,7 @@
 package com.dev.algoviz;
 
 /**
- * This interface is to be implemented by classes who want to be informed when a {@link Maze}'s state changes.
+ * This interface is to be implemented by classes who want to be informed when a {@link Grid}'s state changes.
  */
 public interface IGridListener {
 

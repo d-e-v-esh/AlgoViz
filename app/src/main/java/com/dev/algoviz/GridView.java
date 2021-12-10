@@ -32,8 +32,6 @@ public class GridView extends View {
      * @param grid the maze to display.
      */
     public void setGrid(Grid grid) {
-        Log.d("setGrid", "1");
-        Log.d("setGrid", Integer.toString(grid.getHeight()));
         if (this.grid != null) {
             this.grid.removeMazeListener(gridListener);
         }
@@ -42,8 +40,6 @@ public class GridView extends View {
             this.grid.addMazeListener(gridListener);
         }
         invalidate();
-        Log.d("setGrid  this  ", Integer.toString(this.grid.getHeight()));
-        Log.d("setGrid", "2");
     }
 
     /**
@@ -101,20 +97,17 @@ public class GridView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-        Log.d("setGrid", "3");
         super.onDraw(canvas);
-
-
-//        Log.d("this.grid h in onDraw", Integer.toString(grid.getHeight()));
-//        Log.d("asdfasdf", "asdfasdf");
         if (grid != null) {
             DrawGrid.drawGridBackground(this.grid, canvas);
             if (algorithm != null) {
-//            .paintAlgorithm(this.algorithm, g);
+                DrawAlgo.paintAlgorithm(this.algorithm, canvas);
+//                invalidate();
+                Log.d("CurrentAlgo", this.algorithm.toString());
             }
             DrawGrid.drawForeground(this.grid, canvas);
         }
+//        invalidate();
     }
 
 

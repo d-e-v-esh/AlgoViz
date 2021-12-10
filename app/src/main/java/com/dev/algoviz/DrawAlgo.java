@@ -3,6 +3,7 @@ package com.dev.algoviz;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
 import com.dev.algoviz.graph.Node;
@@ -20,7 +21,6 @@ public class DrawAlgo {
     public static Paint REACHED_COLOR = new Paint();
     public static Paint PATH_COLOR = new Paint();
 
-
     /**
      * Paints the given algorithm. This method will paint the algorithm's reached (explored) nodes, frontier, and, if
      * a path has been found, will also paint the path.
@@ -36,9 +36,9 @@ public class DrawAlgo {
         paintNodes(algorithm.getReached(), REACHED_COLOR, canvas);
         paintNodes(algorithm.getFrontier(), FRONTIER_COLOR, canvas);
 
-        if (algorithm.isPathFound()) {
-            paintPath(algorithm.getPath(), canvas);
-        }
+//        if (algorithm.isPathFound()) {
+//            paintPath(algorithm.getPath(), canvas);
+//        }
     }
 
     /**
@@ -49,6 +49,9 @@ public class DrawAlgo {
      * @param canvas the graphics object to use to paint the nodes.
      */
     private static void paintNodes(Collection<Node> nodes, Paint paint, Canvas canvas) {
+        Point test = (Point) nodes.iterator().next().getData();
+        Log.d("algoX", Integer.toString(test.getX()));
+        Log.d("algoY", Integer.toString(test.getY()));
 
         for (Node node : nodes) {
             Point p = (Point) node.getData();
@@ -80,7 +83,7 @@ public class DrawAlgo {
 //        g.setColor(PATH_COLOR);
 //        g.setStroke(new BasicStroke(3));
 //        g.drawPolyline(xs, ys, path.size());
-        canvas.drawLines(pts,0, path.size(), PATH_COLOR);
+        canvas.drawLines(pts, 0, path.size(), PATH_COLOR);
 
     }
 }

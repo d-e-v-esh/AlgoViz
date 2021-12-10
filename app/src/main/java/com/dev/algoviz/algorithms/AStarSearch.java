@@ -1,5 +1,9 @@
 package com.dev.algoviz.algorithms;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.dev.algoviz.Point;
 import com.dev.algoviz.graph.Graph;
 import com.dev.algoviz.graph.Node;
@@ -27,6 +31,7 @@ public class AStarSearch extends DijkstraSearch {
      * @return < 0 if node1 has a lower priority value, > 0 if node2 has a lower priority value, or 0 if the priority
      * values are equal.
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected int comparePriority(Node node1, Node node2) {
         double priority1 = this.costSoFar.getOrDefault(node1, 0.0);
