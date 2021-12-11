@@ -3,7 +3,6 @@ package com.dev.algoviz;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
 import com.dev.algoviz.graph.Node;
@@ -49,13 +48,9 @@ public class DrawAlgo {
      * @param canvas the graphics object to use to paint the nodes.
      */
     private static void paintNodes(Collection<Node> nodes, Paint paint, Canvas canvas) {
-        Point test = (Point) nodes.iterator().next().getData();
-        Log.d("algoX", Integer.toString(test.getX()));
-        Log.d("algoY", Integer.toString(test.getY()));
-
         for (Node node : nodes) {
             Point p = (Point) node.getData();
-            /// Start from here and start to replace this with android canvas drawRect
+
             canvas.drawRect(p.getX() * DrawGrid.cellWidth, p.getY() * DrawGrid.cellHeight, (p.getX() + 1) * DrawGrid.cellWidth, (p.getY() + 1) * DrawGrid.cellHeight, paint);
         }
     }

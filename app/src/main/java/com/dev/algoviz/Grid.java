@@ -45,7 +45,7 @@ public class Grid {
         }
 
         this.startPoint = new Point(2, 2);
-        this.goalPoint = new Point(width - 1, height - 1);
+        this.goalPoint = new Point(width - 10, height - 10);
 
         fireMazeChanged();
     }

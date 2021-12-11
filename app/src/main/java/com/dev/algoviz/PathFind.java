@@ -58,6 +58,7 @@ public class PathFind extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initializeSearchIfNotInitialized();
+                algorithm.run();
             }
         });
 
