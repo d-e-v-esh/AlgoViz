@@ -105,6 +105,7 @@ public class GridView extends View {
 //                invalidate();
                 Log.d("CurrentAlgo", this.algorithm.toString());
             }
+            DrawGrid.paintGridlines(this.grid, canvas);
             DrawGrid.drawForeground(this.grid, canvas);
         }
 //        invalidate();

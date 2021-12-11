@@ -32,7 +32,6 @@ public class DrawGrid {
     public static void drawGridBackground(Grid grid, Canvas canvas) {
 
         paintTerrain(grid, canvas);
-        paintGridlines(grid, canvas);
 
 
     }
@@ -44,7 +43,7 @@ public class DrawGrid {
      * @param grid   the maze whose grid lines should be painted.
      * @param canvas the graphics object to use to paint the maze.
      */
-    private static void paintGridlines(Grid grid, Canvas canvas) {
+    public static void paintGridlines(Grid grid, Canvas canvas) {
 
         Paint blackPaint = new Paint();
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);

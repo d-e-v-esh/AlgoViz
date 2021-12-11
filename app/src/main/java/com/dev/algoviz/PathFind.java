@@ -19,6 +19,9 @@ import com.dev.algoviz.graph.Graph;
 import com.dev.algoviz.graph.Node;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class PathFind extends AppCompatActivity {
 
     // Here we are going to decide which algo to run and what will be the speed of each algo
@@ -31,6 +34,8 @@ public class PathFind extends AppCompatActivity {
     Grid grid;
     private IGraphSearchAlgorithm algorithm;
 
+    // The timer for animating the algorithm progress.
+    private Timer timer;
     Boolean isDiagonalChecked;
 
     @Override
@@ -58,7 +63,8 @@ public class PathFind extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 initializeSearchIfNotInitialized();
-                algorithm.run();
+//                algorithm.run();
+                startTimer();
             }
         });
 
@@ -98,6 +104,44 @@ public class PathFind extends AppCompatActivity {
             gridView.setAlgorithm(algorithm);
         }
     }
+
+    /**
+     * Stops the timer if it's already running, then starts it again.
+     */
+    private void startTimer() {
+        stopTimer();
+        timer = new Timer();
+        timer.schedule(animationTimer, 0, 25);
+    }
+
+
+    /**
+     * Stops the timer if it's running.
+     */
+    private void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    /**
+     * Each tick of the timer, performs one step of the algorithm. Then, if the algorithm is done, updates the
+     * program state.
+     */
+    TimerTask animationTimer = new TimerTask() {
+        @Override
+        public void run() {
+
+            boolean done = algorithm.step();
+            if (done) {
+                stopTimer();
+//                setProgramState(ProgramState.Done);
+            }
+        }
+    };
+
+
 
     private enum ProgramState {
         Editing, Searching_AnimNotStarted, Searching_AnimStarted, Done
