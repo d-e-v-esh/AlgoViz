@@ -4,7 +4,6 @@ package com.dev.algoviz;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -102,13 +101,10 @@ public class GridView extends View {
             DrawGrid.drawGridBackground(this.grid, canvas);
             if (algorithm != null) {
                 DrawAlgo.paintAlgorithm(this.algorithm, canvas);
-//                invalidate();
-                Log.d("CurrentAlgo", this.algorithm.toString());
             }
             DrawGrid.paintGridlines(this.grid, canvas);
             DrawGrid.drawForeground(this.grid, canvas);
         }
-//        invalidate();
     }
 
 

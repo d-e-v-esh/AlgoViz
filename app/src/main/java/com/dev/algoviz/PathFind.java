@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -28,15 +29,19 @@ public class PathFind extends AppCompatActivity {
 
     private TextInputLayout algorithmMenu;
     private AutoCompleteTextView algorithmDropdown;
-    String[] algorithmsList = {"BFS", "Dijkstra's", "GBFS", "A*"};
+
+
+    String[] algorithmsList = {"Breadth-First Search", "Dijkstra (Uniform Cost Search)", "Greedy Best First Search", "A* Search"};
     CheckBox diagonalCheck;
     public GridView gridView;
     Grid grid;
     private IGraphSearchAlgorithm algorithm;
 
+    int currentAlgorithmIndex = 0;
+
     // The timer for animating the algorithm progress.
     private Timer timer;
-    Boolean isDiagonalChecked;
+    Boolean isDiagonalChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class PathFind extends AppCompatActivity {
                 initializeSearchIfNotInitialized();
 //                algorithm.run();
                 startTimer();
+
             }
         });
 
@@ -79,13 +85,26 @@ public class PathFind extends AppCompatActivity {
             }
         });
 
-        // Here we can say, if dijkstra is selected and start is pressed,
-        algorithmMenu = findViewById(R.id.algorithmMenu);
-        algorithmDropdown = findViewById(R.id.algorithm_dropdown);
+
         ArrayAdapter<String> algoArrayAdapter = new ArrayAdapter<>(
                 PathFind.this, R.layout.algorithms_dropdown, algorithmsList
         );
+
+
+        algoArrayAdapter.setDropDownViewResource(R.layout.algorithms_dropdown);
+        algorithmDropdown = (AutoCompleteTextView) findViewById(R.id.algorithm_dropdown);
         algorithmDropdown.setAdapter(algoArrayAdapter);
+
+
+        algoArrayAdapter.notifyDataSetChanged();
+
+        algorithmDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                currentAlgorithmIndex = position;
+            }
+        });
     }
 
     /**
@@ -96,8 +115,8 @@ public class PathFind extends AppCompatActivity {
     private void initializeSearchIfNotInitialized() {
 
         if (algorithm == null) {
-            String algName = (String) "Dijkstra (Uniform Cost Search)";
-            Graph graph = GraphFactory.fromMaze(grid, true);
+            String algName = (String) algorithmsList[currentAlgorithmIndex];
+            Graph graph = GraphFactory.fromMaze(grid, isDiagonalChecked);
             Node startNode = graph.findNode(grid.getStartPoint());
             Node goalNode = graph.findNode(grid.getGoalPoint());
             algorithm = GraphSearchAlgorithmFactory.createAlgorithm(algName, graph, startNode, goalNode);
@@ -136,11 +155,11 @@ public class PathFind extends AppCompatActivity {
             boolean done = algorithm.step();
             if (done) {
                 stopTimer();
+
 //                setProgramState(ProgramState.Done);
             }
         }
     };
-
 
 
     private enum ProgramState {
@@ -153,5 +172,6 @@ public class PathFind extends AppCompatActivity {
         grid = new Grid(20, 20);
         gridView = (GridView) findViewById(R.id.gridView);
         gridView.setGrid(grid);
+        algorithmDropdown.setText(algorithmsList[0], false);
     }
 }
