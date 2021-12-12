@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,7 @@ import com.dev.algoviz.algorithms.GraphSearchAlgorithmFactory;
 import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
 import com.dev.algoviz.graph.Graph;
 import com.dev.algoviz.graph.Node;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputLayout;
 
 
@@ -28,6 +30,8 @@ public class PathFind extends AppCompatActivity {
 
     private TextInputLayout algorithmMenu;
     private AutoCompleteTextView algorithmDropdown;
+    private Slider speedSlider;
+    private int currentAnimationSpeed = 20;
 
 
     String[] algorithmsList = {"Breadth-First Search", "Dijkstra (Uniform Cost Search)", "Greedy Best First Search", "A* Search"};
@@ -110,7 +114,21 @@ public class PathFind extends AppCompatActivity {
                 currentAlgorithmIndex = position;
             }
         });
+
+        speedSlider = (Slider) findViewById(R.id.speedSlider);
+
+        speedSlider.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                currentAnimationSpeed = (int) value;
+                Log.d("speed", Float.toString(currentAnimationSpeed));
+                startTimer();
+            }
+
+        });
+
     }
+
 
     /**
      * Initializes the search functionality based on the maze in its current state. Uses the {@link GraphFactory} class
@@ -146,7 +164,7 @@ public class PathFind extends AppCompatActivity {
         stopTimer();
 
 
-        timer = new CountDownTimer(1000 * 1000, 1) {
+        timer = new CountDownTimer(1000 * 1000, currentAnimationSpeed) {
             public void onTick(long millisUntilFinished) {
                 boolean done = algorithm.step();
                 if (done) {
