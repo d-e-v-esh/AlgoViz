@@ -2,6 +2,7 @@ package com.dev.algoviz;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,8 +21,6 @@ import com.dev.algoviz.graph.Graph;
 import com.dev.algoviz.graph.Node;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PathFind extends AppCompatActivity {
 
@@ -40,7 +39,7 @@ public class PathFind extends AppCompatActivity {
     int currentAlgorithmIndex = 0;
 
     // The timer for animating the algorithm progress.
-    private Timer timer;
+    private CountDownTimer timer;
     Boolean isDiagonalChecked = false;
 
     @Override
@@ -56,19 +55,25 @@ public class PathFind extends AppCompatActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Removes the walls
                 grid.reset();
-                gridView.setAlgorithm(null);
+
+                resetAlgorithm();
+
             }
 
         });
+
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
+                resetAlgorithm();
                 initializeSearchIfNotInitialized();
 //                algorithm.run();
+                // Starts animating the algorithm
+
                 startTimer();
 
             }
@@ -124,13 +129,37 @@ public class PathFind extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Resets the algorithm
+     */
+    private void resetAlgorithm() {
+        algorithm = null;
+        stopTimer();
+        gridView.setAlgorithm(null);
+    }
+
     /**
      * Stops the timer if it's already running, then starts it again.
      */
     private void startTimer() {
         stopTimer();
-        timer = new Timer();
-        timer.schedule(animationTimer, 0, 25);
+
+
+        timer = new CountDownTimer(1000 * 1000, 1) {
+            public void onTick(long millisUntilFinished) {
+                boolean done = algorithm.step();
+                if (done) {
+                    stopTimer();
+//                setProgramState(ProgramState.Done);
+                }
+            }
+
+            public void onFinish() {
+//                stopTimer();
+            }
+        };
+        timer.start();
     }
 
 
@@ -139,6 +168,7 @@ public class PathFind extends AppCompatActivity {
      */
     private void stopTimer() {
         if (timer != null) {
+
             timer.cancel();
             timer = null;
         }
@@ -148,18 +178,6 @@ public class PathFind extends AppCompatActivity {
      * Each tick of the timer, performs one step of the algorithm. Then, if the algorithm is done, updates the
      * program state.
      */
-    TimerTask animationTimer = new TimerTask() {
-        @Override
-        public void run() {
-
-            boolean done = algorithm.step();
-            if (done) {
-                stopTimer();
-
-//                setProgramState(ProgramState.Done);
-            }
-        }
-    };
 
 
     private enum ProgramState {
