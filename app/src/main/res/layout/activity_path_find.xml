@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,18 +12,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <com.dev.algoviz.GridView
             android:id="@+id/gridView"
             android:layout_width="match_parent"
 
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="2.7"
             android:background="@android:color/transparent"
             android:fadingEdge="vertical"
             android:gravity="top"
             android:padding="5dp"
             android:scrollbars="vertical" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,9 +50,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/slider_desc"
-                    android:value="20.0"
-                    android:valueFrom="1.0"
-                    android:valueTo="100.0" />
+                    android:stepSize="20"
+                    android:value="20"
+                    android:valueFrom="0"
+                    android:valueTo="240"
+                    app:labelBehavior="gone" />
 
             </LinearLayout>
 
@@ -69,6 +72,44 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/start" />
+
+
+                <Button
+                    android:id="@+id/stepButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/step" />
+
+
+                <Button
+                    android:id="@+id/finishButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/finish" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+
+                <Button
+                    android:id="@+id/clearButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/clear" />
 
                 <CheckBox
                     android:id="@+id/diagonalCheck"
@@ -88,14 +129,15 @@
                     android:layout_weight="1"
                     android:text="@string/reset" />
 
+
             </LinearLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
 
                 android:id="@+id/algorithmMenu"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
 
                 android:hint="@string/choose_algorithm"

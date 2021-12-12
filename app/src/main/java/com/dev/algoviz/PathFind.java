@@ -40,6 +40,7 @@ public class PathFind extends AppCompatActivity {
     Grid grid;
     private IGraphSearchAlgorithm algorithm;
 
+    Boolean isSliderMoving = false;
     int currentAlgorithmIndex = 0;
 
     // The timer for animating the algorithm progress.
@@ -53,14 +54,16 @@ public class PathFind extends AppCompatActivity {
         setContentView(R.layout.activity_path_find);
 
         Button resetButton = findViewById(R.id.resetButton);
+        Button stepButton = findViewById(R.id.stepButton);
+        Button finishButton = findViewById(R.id.finishButton);
         Button startButton = findViewById(R.id.startButton);
+        Button clearButton = findViewById(R.id.clearButton);
         diagonalCheck = findViewById(R.id.diagonalCheck);
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Removes the walls
-                grid.reset();
 
                 resetAlgorithm();
 
@@ -85,11 +88,13 @@ public class PathFind extends AppCompatActivity {
 
 
         diagonalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //                updateDiagonalCheckBox(buttonView.isChecked());
 
                 isDiagonalChecked = buttonView.isChecked();
+//                initializeSearchIfNotInitialized();
                 Log.d("Diagonal Check", Boolean.toString(isDiagonalChecked));
             }
         });
@@ -120,11 +125,44 @@ public class PathFind extends AppCompatActivity {
         speedSlider.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                currentAnimationSpeed = (int) value;
-                Log.d("speed", Float.toString(currentAnimationSpeed));
+                if (value == 0) {
+                    currentAnimationSpeed = 1;
+                } else {
+                    currentAnimationSpeed = (int) value;
+                }
                 startTimer();
             }
+        });
 
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                initializeSearchIfNotInitialized();
+                stopTimer();
+                algorithm.run();
+//                ProgramState.Done
+            }
+        });
+
+
+        stepButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+
+                initializeSearchIfNotInitialized();
+                stopTimer();
+                boolean done = algorithm.step();
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Removes the walls
+                grid.reset();
+            }
         });
 
     }
@@ -166,10 +204,14 @@ public class PathFind extends AppCompatActivity {
 
         timer = new CountDownTimer(1000 * 1000, currentAnimationSpeed) {
             public void onTick(long millisUntilFinished) {
-                boolean done = algorithm.step();
-                if (done) {
-                    stopTimer();
+
+                if (algorithm != null) {
+
+                    boolean done = algorithm.step();
+                    if (done) {
+                        stopTimer();
 //                setProgramState(ProgramState.Done);
+                    }
                 }
             }
 
