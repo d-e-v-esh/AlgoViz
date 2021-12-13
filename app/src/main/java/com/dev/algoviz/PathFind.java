@@ -292,9 +292,9 @@ public class PathFind extends AppCompatActivity {
                 completeButton.setEnabled(false);
 
 
-                algorithmDropdown.setEnabled(false);
+                algorithmDropdown.setEnabled(true);
                 deWallButton.setEnabled(false);
-                diagonalCheck.setEnabled(false);
+                diagonalCheck.setEnabled(true);
                 resetButton.setEnabled(true);
                 break;
         }
