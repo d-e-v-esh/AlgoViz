@@ -51,9 +51,9 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/slider_desc"
                     android:stepSize="20"
-                    android:value="20"
+                    android:value="40"
                     android:valueFrom="0"
-                    android:valueTo="240"
+                    android:valueTo="300"
                     app:labelBehavior="gone" />
 
             </LinearLayout>
@@ -66,12 +66,12 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/startButton"
+                    android:id="@+id/playPauseButton"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/start" />
+                    android:text="@string/play" />
 
 
                 <Button
@@ -84,12 +84,12 @@
 
 
                 <Button
-                    android:id="@+id/finishButton"
+                    android:id="@+id/completeButton"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/finish" />
+                    android:text="@string/complete" />
 
 
             </LinearLayout>
@@ -104,12 +104,12 @@
 
 
                 <Button
-                    android:id="@+id/clearButton"
+                    android:id="@+id/deWall"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/clear" />
+                    android:text="@string/deWall" />
 
                 <CheckBox
                     android:id="@+id/diagonalCheck"

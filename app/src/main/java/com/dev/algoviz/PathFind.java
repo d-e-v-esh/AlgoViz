@@ -26,14 +26,12 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class PathFind extends AppCompatActivity {
 
-    // Here we are going to decide which algo to run and what will be the speed of each algo
-
     private TextInputLayout algorithmMenu;
     private AutoCompleteTextView algorithmDropdown;
     private Slider speedSlider;
-    private int currentAnimationSpeed = 20;
+    private int currentAnimationSpeed = 40;
 
-
+    private ProgramState programState;
     String[] algorithmsList = {"Breadth-First Search", "Dijkstra (Uniform Cost Search)", "Greedy Best First Search", "A* Search"};
     CheckBox diagonalCheck;
     public GridView gridView;
@@ -46,6 +44,24 @@ public class PathFind extends AppCompatActivity {
     // The timer for animating the algorithm progress.
     private CountDownTimer timer;
     Boolean isDiagonalChecked = false;
+    Boolean isPlaying = false;
+
+    Button playPauseButton;
+
+    private enum ProgramState {
+        Editing, Searching_AnimNotStarted, Searching_AnimStarted, Done
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        grid = new Grid(20, 20);
+        gridView = (GridView) findViewById(R.id.gridView);
+        gridView.setGrid(grid);
+        setProgramState(ProgramState.Editing);
+        algorithmDropdown.setText(algorithmsList[0], false);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,37 +69,74 @@ public class PathFind extends AppCompatActivity {
 
         setContentView(R.layout.activity_path_find);
 
+        playPauseButton = findViewById(R.id.playPauseButton);
         Button resetButton = findViewById(R.id.resetButton);
         Button stepButton = findViewById(R.id.stepButton);
-        Button finishButton = findViewById(R.id.finishButton);
-        Button startButton = findViewById(R.id.startButton);
-        Button clearButton = findViewById(R.id.clearButton);
+        Button completeButton = findViewById(R.id.completeButton);
+        Button deWallButton = findViewById(R.id.deWall);
         diagonalCheck = findViewById(R.id.diagonalCheck);
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Removes the walls
+
 
                 resetAlgorithm();
+
+                setProgramState(ProgramState.Editing);
 
             }
 
         });
 
 
-        startButton.setOnClickListener(new View.OnClickListener() {
+        playPauseButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                resetAlgorithm();
-                initializeSearchIfNotInitialized();
-//                algorithm.run();
-                // Starts animating the algorithm
 
-                startTimer();
+
+//                When we click on the start button, if the algorithm is not running or we are in the editing phase then we need to run it and set button to stop,
+//              but if the algorithm is running on start then stop the algorithm then set the button text to start
+
+
+                switch (programState) {
+                    case Editing:
+
+                    case Done:
+                        resetAlgorithm();
+                        initializeSearchIfNotInitialized();
+
+                        startTimer();
+                        playPauseButton.setText(R.string.pause);
+                        setProgramState(ProgramState.Searching_AnimStarted);
+                        break;
+
+                    case Searching_AnimStarted:
+//                    case Done:
+                        playPauseButton.setText(R.string.play);
+                        stopTimer();
+                        setProgramState(ProgramState.Searching_AnimNotStarted);
+                        break;
+
+                    case Searching_AnimNotStarted:
+                        startTimer();
+                        playPauseButton.setText(R.string.pause);
+                        setProgramState(ProgramState.Searching_AnimStarted);
+                        break;
+
+
+                }
+
+
+                Log.d("programState", programState.toString());
+
+////
+
 
             }
+
+
         });
 
 
@@ -91,11 +144,7 @@ public class PathFind extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                updateDiagonalCheckBox(buttonView.isChecked());
-
                 isDiagonalChecked = buttonView.isChecked();
-//                initializeSearchIfNotInitialized();
-                Log.d("Diagonal Check", Boolean.toString(isDiagonalChecked));
             }
         });
 
@@ -131,17 +180,19 @@ public class PathFind extends AppCompatActivity {
                     currentAnimationSpeed = (int) value;
                 }
                 startTimer();
+
+                Log.d("programState", programState.toString());
             }
         });
 
-        finishButton.setOnClickListener(new View.OnClickListener() {
+        completeButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 initializeSearchIfNotInitialized();
                 stopTimer();
                 algorithm.run();
-//                ProgramState.Done
+                setProgramState(ProgramState.Done);
             }
         });
 
@@ -154,13 +205,17 @@ public class PathFind extends AppCompatActivity {
                 initializeSearchIfNotInitialized();
                 stopTimer();
                 boolean done = algorithm.step();
+                setProgramState(done ? ProgramState.Done : ProgramState.Searching_AnimNotStarted);
             }
         });
 
-        clearButton.setOnClickListener(new View.OnClickListener() {
+        deWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Removes the walls
+                // TODO: Rename FINISH to COMPLETE, Divide jobs between clear and complete buttons. There is confusion between those two.
+
+
                 grid.reset();
             }
         });
@@ -210,16 +265,24 @@ public class PathFind extends AppCompatActivity {
                     boolean done = algorithm.step();
                     if (done) {
                         stopTimer();
-//                setProgramState(ProgramState.Done);
+                        setProgramState(ProgramState.Done);
+                        playPauseButton.setText(R.string.play);
+
+                        Log.d("programState", programState.toString());
                     }
                 }
             }
 
+            @Override
             public void onFinish() {
-//                stopTimer();
+//
             }
+
         };
         timer.start();
+
+
+        Log.d("programState", programState.toString());
     }
 
 
@@ -234,22 +297,62 @@ public class PathFind extends AppCompatActivity {
         }
     }
 
+
     /**
-     * Each tick of the timer, performs one step of the algorithm. Then, if the algorithm is done, updates the
-     * program state.
+     * Updates the program state. Enables / disables UI elements to match the state.
      */
+    private void setProgramState(ProgramState programState) {
+        this.programState = programState;
+        switch (programState) {
+            case Editing:
+                grid.setLocked(false);
+//                btnClearWalls.setEnabled(true);
+//                cboSearchAlgorithm.setEnabled(true);
+//                btnStartAnimation.setEnabled(true);
+//                btnStopAnimation.setEnabled(false);
+//                btnSingleStep.setEnabled(true);
+//                btnRunToCompletion.setEnabled(true);
+//                btnResetSearch.setEnabled(false);
+//                chkAllowDiagonal.setEnabled(true);
+                break;
 
+            case Searching_AnimNotStarted:
+                grid.setLocked(true);
+//                btnClearWalls.setEnabled(false);
+//                cboSearchAlgorithm.setEnabled(false);
+//                btnStartAnimation.setEnabled(true);
+//                btnStopAnimation.setEnabled(false);
+//                btnSingleStep.setEnabled(true);
+//                btnRunToCompletion.setEnabled(true);
+//                btnResetSearch.setEnabled(true);
+//                chkAllowDiagonal.setEnabled(false);
+                break;
 
-    private enum ProgramState {
-        Editing, Searching_AnimNotStarted, Searching_AnimStarted, Done
+            case Searching_AnimStarted:
+                grid.setLocked(true);
+//                btnClearWalls.setEnabled(false);
+//                cboSearchAlgorithm.setEnabled(false);
+//                btnStartAnimation.setEnabled(false);
+//                btnStopAnimation.setEnabled(true);
+//                btnSingleStep.setEnabled(true);
+//                btnRunToCompletion.setEnabled(true);
+//                btnResetSearch.setEnabled(true);
+//                chkAllowDiagonal.setEnabled(false);
+                break;
+
+            case Done:
+                grid.setLocked(true);
+//                btnClearWalls.setEnabled(false);
+//                cboSearchAlgorithm.setEnabled(false);
+//                btnStartAnimation.setEnabled(false);
+//                btnStopAnimation.setEnabled(false);
+//                btnSingleStep.setEnabled(false);
+//                btnRunToCompletion.setEnabled(false);
+//                btnResetSearch.setEnabled(true);
+//                chkAllowDiagonal.setEnabled(false);
+                break;
+        }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        grid = new Grid(20, 20);
-        gridView = (GridView) findViewById(R.id.gridView);
-        gridView.setGrid(grid);
-        algorithmDropdown.setText(algorithmsList[0], false);
-    }
+
 }
