@@ -4,15 +4,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,14 +17,11 @@ import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
 import com.dev.algoviz.graph.Graph;
 import com.dev.algoviz.graph.Node;
 import com.google.android.material.slider.Slider;
-import com.google.android.material.textfield.TextInputLayout;
 
 
 public class PathFind extends AppCompatActivity {
 
-    private TextInputLayout algorithmMenu;
     private AutoCompleteTextView algorithmDropdown;
-    private Slider speedSlider;
     private int currentAnimationSpeed = 40;
 
     private ProgramState programState;
@@ -38,15 +31,17 @@ public class PathFind extends AppCompatActivity {
     Grid grid;
     private IGraphSearchAlgorithm algorithm;
 
-    Boolean isSliderMoving = false;
     int currentAlgorithmIndex = 0;
 
     // The timer for animating the algorithm progress.
     private CountDownTimer timer;
     Boolean isDiagonalChecked = false;
-    Boolean isPlaying = false;
 
     Button playPauseButton;
+    Button deWallButton;
+    Button resetButton;
+    Button stepButton;
+    Button completeButton;
 
     private enum ProgramState {
         Editing, Searching_AnimNotStarted, Searching_AnimStarted, Done
@@ -57,12 +52,13 @@ public class PathFind extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         grid = new Grid(20, 20);
-        gridView = (GridView) findViewById(R.id.gridView);
+        gridView = findViewById(R.id.gridView);
         gridView.setGrid(grid);
         setProgramState(ProgramState.Editing);
         algorithmDropdown.setText(algorithmsList[0], false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,83 +66,48 @@ public class PathFind extends AppCompatActivity {
         setContentView(R.layout.activity_path_find);
 
         playPauseButton = findViewById(R.id.playPauseButton);
-        Button resetButton = findViewById(R.id.resetButton);
-        Button stepButton = findViewById(R.id.stepButton);
-        Button completeButton = findViewById(R.id.completeButton);
-        Button deWallButton = findViewById(R.id.deWall);
+        resetButton = findViewById(R.id.resetButton);
+        stepButton = findViewById(R.id.stepButton);
+        completeButton = findViewById(R.id.completeButton);
+        deWallButton = findViewById(R.id.deWall);
         diagonalCheck = findViewById(R.id.diagonalCheck);
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-
-                resetAlgorithm();
-
-                setProgramState(ProgramState.Editing);
-
-            }
+        resetButton.setOnClickListener(v -> {
+            resetAlgorithm();
+            setProgramState(ProgramState.Editing);
 
         });
 
 
-        playPauseButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
+        playPauseButton.setOnClickListener(v -> {
+            switch (programState) {
+                case Editing:
+                case Done:
+                    resetAlgorithm();
+                    initializeSearchIfNotInitialized();
+                    startTimer();
+                    playPauseButton.setText(R.string.pause);
+                    setProgramState(ProgramState.Searching_AnimStarted);
+                    break;
 
+                case Searching_AnimStarted:
+                    playPauseButton.setText(R.string.play);
+                    stopTimer();
+                    setProgramState(ProgramState.Searching_AnimNotStarted);
+                    break;
 
-//                When we click on the start button, if the algorithm is not running or we are in the editing phase then we need to run it and set button to stop,
-//              but if the algorithm is running on start then stop the algorithm then set the button text to start
-
-
-                switch (programState) {
-                    case Editing:
-
-                    case Done:
-                        resetAlgorithm();
-                        initializeSearchIfNotInitialized();
-
-                        startTimer();
-                        playPauseButton.setText(R.string.pause);
-                        setProgramState(ProgramState.Searching_AnimStarted);
-                        break;
-
-                    case Searching_AnimStarted:
-//                    case Done:
-                        playPauseButton.setText(R.string.play);
-                        stopTimer();
-                        setProgramState(ProgramState.Searching_AnimNotStarted);
-                        break;
-
-                    case Searching_AnimNotStarted:
-                        startTimer();
-                        playPauseButton.setText(R.string.pause);
-                        setProgramState(ProgramState.Searching_AnimStarted);
-                        break;
-
-
-                }
-
-
-                Log.d("programState", programState.toString());
-
-////
-
-
+                case Searching_AnimNotStarted:
+                    startTimer();
+                    playPauseButton.setText(R.string.pause);
+                    setProgramState(ProgramState.Searching_AnimStarted);
+                    break;
             }
-
-
+            Log.d("programState", programState.toString());
         });
 
 
-        diagonalCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isDiagonalChecked = buttonView.isChecked();
-            }
-        });
+        diagonalCheck.setOnCheckedChangeListener((buttonView, isChecked) -> isDiagonalChecked = buttonView.isChecked());
 
 
         ArrayAdapter<String> algoArrayAdapter = new ArrayAdapter<>(
@@ -155,69 +116,49 @@ public class PathFind extends AppCompatActivity {
 
 
         algoArrayAdapter.setDropDownViewResource(R.layout.algorithms_dropdown);
-        algorithmDropdown = (AutoCompleteTextView) findViewById(R.id.algorithm_dropdown);
+        algorithmDropdown = findViewById(R.id.algorithm_dropdown);
         algorithmDropdown.setAdapter(algoArrayAdapter);
 
 
         algoArrayAdapter.notifyDataSetChanged();
 
-        algorithmDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        algorithmDropdown.setOnItemClickListener((parent, view, position, id) -> currentAlgorithmIndex = position);
 
-                currentAlgorithmIndex = position;
+        Slider speedSlider = findViewById(R.id.speedSlider);
+
+        speedSlider.addOnChangeListener((slider, value, fromUser) -> {
+            if (value == 0) {
+                currentAnimationSpeed = 1;
+            } else {
+                currentAnimationSpeed = (int) value;
             }
+            startTimer();
+
+            Log.d("programState", programState.toString());
         });
 
-        speedSlider = (Slider) findViewById(R.id.speedSlider);
-
-        speedSlider.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                if (value == 0) {
-                    currentAnimationSpeed = 1;
-                } else {
-                    currentAnimationSpeed = (int) value;
-                }
-                startTimer();
-
-                Log.d("programState", programState.toString());
-            }
-        });
-
-        completeButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-                initializeSearchIfNotInitialized();
-                stopTimer();
-                algorithm.run();
-                setProgramState(ProgramState.Done);
-            }
+        completeButton.setOnClickListener(v -> {
+            initializeSearchIfNotInitialized();
+            stopTimer();
+            algorithm.run();
+            setProgramState(ProgramState.Done);
         });
 
 
-        stepButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
+        stepButton.setOnClickListener(v -> {
 
-                initializeSearchIfNotInitialized();
-                stopTimer();
-                boolean done = algorithm.step();
-                setProgramState(done ? ProgramState.Done : ProgramState.Searching_AnimNotStarted);
-            }
+            initializeSearchIfNotInitialized();
+            stopTimer();
+            boolean done = algorithm.step();
+            setProgramState(done ? ProgramState.Done : ProgramState.Searching_AnimNotStarted);
         });
 
-        deWallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Removes the walls
-                // TODO: Rename FINISH to COMPLETE, Divide jobs between clear and complete buttons. There is confusion between those two.
+        deWallButton.setOnClickListener(v -> {
+            // Removes the walls
+            // TODO: Rename FINISH to COMPLETE, Divide jobs between clear and complete buttons. There is confusion between those two.
 
 
-                grid.reset();
-            }
+            grid.reset();
         });
 
     }
@@ -231,7 +172,7 @@ public class PathFind extends AppCompatActivity {
     private void initializeSearchIfNotInitialized() {
 
         if (algorithm == null) {
-            String algName = (String) algorithmsList[currentAlgorithmIndex];
+            String algName = algorithmsList[currentAlgorithmIndex];
             Graph graph = GraphFactory.fromMaze(grid, isDiagonalChecked);
             Node startNode = graph.findNode(grid.getStartPoint());
             Node goalNode = graph.findNode(grid.getGoalPoint());
@@ -306,50 +247,55 @@ public class PathFind extends AppCompatActivity {
         switch (programState) {
             case Editing:
                 grid.setLocked(false);
-//                btnClearWalls.setEnabled(true);
-//                cboSearchAlgorithm.setEnabled(true);
-//                btnStartAnimation.setEnabled(true);
-//                btnStopAnimation.setEnabled(false);
-//                btnSingleStep.setEnabled(true);
-//                btnRunToCompletion.setEnabled(true);
-//                btnResetSearch.setEnabled(false);
-//                chkAllowDiagonal.setEnabled(true);
+
+                resetButton.setEnabled(false);
+
+                diagonalCheck.setEnabled(true);
+
+                stepButton.setEnabled(true);
+                completeButton.setEnabled(true);
+                algorithmDropdown.setEnabled(true);
+                deWallButton.setEnabled(true);
                 break;
 
             case Searching_AnimNotStarted:
                 grid.setLocked(true);
-//                btnClearWalls.setEnabled(false);
-//                cboSearchAlgorithm.setEnabled(false);
-//                btnStartAnimation.setEnabled(true);
-//                btnStopAnimation.setEnabled(false);
-//                btnSingleStep.setEnabled(true);
-//                btnRunToCompletion.setEnabled(true);
-//                btnResetSearch.setEnabled(true);
-//                chkAllowDiagonal.setEnabled(false);
+
+                algorithmDropdown.setEnabled(false);
+                diagonalCheck.setEnabled(false);
+                resetButton.setEnabled(true);
+
+                stepButton.setEnabled(true);
+                completeButton.setEnabled(true);
+                deWallButton.setEnabled(false);
                 break;
 
             case Searching_AnimStarted:
                 grid.setLocked(true);
-//                btnClearWalls.setEnabled(false);
-//                cboSearchAlgorithm.setEnabled(false);
-//                btnStartAnimation.setEnabled(false);
-//                btnStopAnimation.setEnabled(true);
-//                btnSingleStep.setEnabled(true);
-//                btnRunToCompletion.setEnabled(true);
-//                btnResetSearch.setEnabled(true);
-//                chkAllowDiagonal.setEnabled(false);
+
+
+                stepButton.setEnabled(true);
+                completeButton.setEnabled(true);
+
+                algorithmDropdown.setEnabled(false);
+                deWallButton.setEnabled(false);
+                diagonalCheck.setEnabled(false);
+                resetButton.setEnabled(true);
                 break;
 
             case Done:
                 grid.setLocked(true);
-//                btnClearWalls.setEnabled(false);
-//                cboSearchAlgorithm.setEnabled(false);
-//                btnStartAnimation.setEnabled(false);
-//                btnStopAnimation.setEnabled(false);
-//                btnSingleStep.setEnabled(false);
-//                btnRunToCompletion.setEnabled(false);
-//                btnResetSearch.setEnabled(true);
-//                chkAllowDiagonal.setEnabled(false);
+
+                // single stop and complete false on done
+
+                stepButton.setEnabled(false);
+                completeButton.setEnabled(false);
+
+
+                algorithmDropdown.setEnabled(false);
+                deWallButton.setEnabled(false);
+                diagonalCheck.setEnabled(false);
+                resetButton.setEnabled(true);
                 break;
         }
     }
