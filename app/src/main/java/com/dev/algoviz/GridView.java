@@ -4,7 +4,6 @@ package com.dev.algoviz;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -89,10 +88,6 @@ public class GridView extends View {
 
             int clickedTileX = (int) (event.getX() - offsets.getX()) / DrawGrid.cellWidth;
             int clickedTileY = (int) (event.getY() - offsets.getY()) / DrawGrid.cellHeight;
-
-
-            Log.d("Canvas Width", Integer.toString(this.getWidth()));
-            Log.d("Canvas Height", Integer.toString(this.getHeight()));
 
             if (clickedTileX >= 0 && clickedTileY >= 0 && clickedTileX < this.grid.getWidth() && clickedTileY < this.grid.getHeight()) {
                 return new Point(clickedTileX, clickedTileY);

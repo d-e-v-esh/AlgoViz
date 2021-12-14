@@ -115,7 +115,6 @@ public class PathFind extends AppCompatActivity {
                     setProgramState(ProgramState.Searching_AnimStarted);
                     break;
             }
-            Log.d("programState", programState.toString());
         });
 
 
