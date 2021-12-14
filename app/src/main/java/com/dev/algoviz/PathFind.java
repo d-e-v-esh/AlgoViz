@@ -88,7 +88,7 @@ public class PathFind extends AppCompatActivity {
         resetButton.setOnClickListener(v -> {
             resetAlgorithm();
             setProgramState(ProgramState.Editing);
-
+            playPauseButton.setText(R.string.play);
         });
 
 
