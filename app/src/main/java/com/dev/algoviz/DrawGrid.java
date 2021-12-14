@@ -11,11 +11,6 @@ public class DrawGrid {
     public static Paint redPaint = new Paint();
     public static Paint whitePaint = new Paint();
 
-
-    private static final int numberOfRows = 89;
-    private static final int numberOfColumns = 54;
-
-
     public static void drawForeground(Grid grid, Canvas canvas) {
         greenPaint.setColor(Color.GREEN);
         redPaint.setColor(Color.RED);
@@ -61,7 +56,7 @@ public class DrawGrid {
 
         // Creates outline
         blackPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(0, 0, cellHeight * grid.getHeight(), cellWidth * grid.getWidth(), blackPaint);
+        canvas.drawRect(0, 0, cellWidth * grid.getWidth(), cellHeight * grid.getHeight(), blackPaint);
 
     }
 
