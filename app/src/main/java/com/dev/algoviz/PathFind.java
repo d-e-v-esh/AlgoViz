@@ -54,9 +54,16 @@ public class PathFind extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        grid = new Grid(20, 20);
+        grid = new Grid(21, 25);
         gridView = findViewById(R.id.gridView);
         gridView.setGrid(grid);
+
+        int canvasWidth = this.gridView.getMeasuredWidth();
+        int canvasHeight = this.gridView.getMeasuredHeight();
+        Log.d("Canvas Width", Integer.toString(canvasWidth));
+        Log.d("Canvas Height", Integer.toString(canvasHeight));
+
+
         setProgramState(ProgramState.Editing);
         algorithmDropdown.setText(algorithmsList[0], false);
         blockTypeDropdown.setText(blockTypeList[0], false);
@@ -141,9 +148,12 @@ public class PathFind extends AppCompatActivity {
 
         speedSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (value == 0) {
+                currentAnimationSpeed = 300;
+            }
+            if (value == 300) {
                 currentAnimationSpeed = 1;
             } else {
-                currentAnimationSpeed = (int) value;
+                currentAnimationSpeed = 300 - (int) value;
             }
             startTimer();
 
