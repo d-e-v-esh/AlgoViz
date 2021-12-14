@@ -4,7 +4,6 @@ package com.dev.algoviz;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -124,11 +123,9 @@ public class GridView extends View {
                     break;
                 case MoveStart:
                     this.grid.setStartPoint(clickedBlock);
-                    Log.d("Start", "StartMoving");
                     break;
                 case MoveGoal:
                     this.grid.setGoalPoint(clickedBlock);
-                    Log.d("Goal ====>", "Goal MOving");
                     break;
             }
         }
@@ -144,10 +141,9 @@ public class GridView extends View {
         Point clickedBlock = getClickedBlock(event);
 
 
-        Log.d("BlockType", Integer.toString(blockType));
-
         switch (event.getAction()) {
-            // Merged tap and drag functions
+
+            // TAP and DRAG are merged under one case for now
             case MotionEvent.ACTION_DOWN:
             case DragEvent.ACTION_DRAG_LOCATION:
                 if (clickedBlock == null) {
@@ -161,7 +157,6 @@ public class GridView extends View {
                 } else if (blockType == 1) {
                     touchOperation = TouchOperation.DeleteWall;
                 }
-
                 break;
         }
 
