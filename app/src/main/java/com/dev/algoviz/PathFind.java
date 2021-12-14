@@ -28,7 +28,7 @@ public class PathFind extends AppCompatActivity {
 
     private ProgramState programState;
     String[] algorithmsList = {"Breadth-First Search", "Dijkstra (Uniform Cost Search)", "Greedy Best First Search", "A* Search"};
-    String[] blockTypeList = {"Wall", "Blank"};
+    String[] blockTypeList = {"Wall", "Blank", "Start", "End"};
     CheckBox diagonalCheck;
     public GridView gridView;
     Grid grid;

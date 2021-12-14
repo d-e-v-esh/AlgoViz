@@ -4,6 +4,7 @@ package com.dev.algoviz;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -119,6 +120,16 @@ public class GridView extends View {
                     break;
                 case DeleteWall:
                     this.grid.setTile(clickedBlock, TileTypes.Blank);
+
+                    break;
+                case MoveStart:
+                    this.grid.setStartPoint(clickedBlock);
+                    Log.d("Start", "StartMoving");
+                    break;
+                case MoveGoal:
+                    this.grid.setGoalPoint(clickedBlock);
+                    Log.d("Goal ====>", "Goal MOving");
+                    break;
             }
         }
     }
@@ -133,17 +144,24 @@ public class GridView extends View {
         Point clickedBlock = getClickedBlock(event);
 
 
+        Log.d("BlockType", Integer.toString(blockType));
+
         switch (event.getAction()) {
             // Merged tap and drag functions
             case MotionEvent.ACTION_DOWN:
             case DragEvent.ACTION_DRAG_LOCATION:
                 if (clickedBlock == null) {
                     touchOperation = TouchOperation.None;
+                } else if (blockType == 2) {
+                    touchOperation = TouchOperation.MoveStart;
+                } else if (blockType == 3) {
+                    touchOperation = TouchOperation.MoveGoal;
                 } else if (blockType == 0) {
                     touchOperation = TouchOperation.PlaceWall;
                 } else if (blockType == 1) {
                     touchOperation = TouchOperation.DeleteWall;
                 }
+
                 break;
         }
 
@@ -163,7 +181,7 @@ public class GridView extends View {
     private final IAlgorithmListener algListener = alg -> invalidate();
 
     private enum TouchOperation {
-        None, PlaceWall, DeleteWall
+        None, PlaceWall, DeleteWall, MoveStart, MoveGoal
     }
 
 }

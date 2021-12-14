@@ -62,7 +62,9 @@ public class DrawAlgo {
     private static void paintPath(List<Node> path, Canvas canvas) {
         for (int i = 0; i < path.size(); i++) {
             Point p = (Point) path.get(i).getData();
+
             canvas.drawRect(p.getX() * DrawGrid.cellWidth, p.getY() * DrawGrid.cellWidth, (p.getX() + 1) * DrawGrid.cellWidth, (p.getY() + 1) * DrawGrid.cellWidth, PATH_COLOR);
+
         }
     }
 }
