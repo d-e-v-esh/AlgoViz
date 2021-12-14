@@ -35,9 +35,9 @@ public class DrawAlgo {
         paintNodes(algorithm.getReached(), REACHED_COLOR, canvas);
         paintNodes(algorithm.getFrontier(), FRONTIER_COLOR, canvas);
 
-//        if (algorithm.isPathFound()) {
-//            paintPath(algorithm.getPath(), canvas);
-//        }
+        if (algorithm.isPathFound()) {
+            paintPath(algorithm.getPath(), canvas);
+        }
     }
 
     /**
@@ -56,29 +56,13 @@ public class DrawAlgo {
     }
 
     /**
-     * Paints a polyline of n points, n being the size of the given path. Each point in the polyline will be centered
-     * on the corresponding node.
-     *
      * @param path   the nodes in the path to paint.
      * @param canvas the graphics object to use to paint the path.
      */
     private static void paintPath(List<Node> path, Canvas canvas) {
-
-        int[] xs = new int[path.size()];
-        int[] ys = new int[path.size()];
-        float[] pts = new float[path.size()];
-
         for (int i = 0; i < path.size(); i++) {
             Point p = (Point) path.get(i).getData();
-
-            xs[i] = p.getX() * DrawGrid.cellWidth + DrawGrid.cellWidth / 2;
-            ys[i] = p.getY() * DrawGrid.cellHeight + DrawGrid.cellHeight / 2;
+            canvas.drawRect(p.getX() * DrawGrid.cellWidth, p.getY() * DrawGrid.cellWidth, (p.getX() + 1) * DrawGrid.cellWidth, (p.getY() + 1) * DrawGrid.cellWidth, PATH_COLOR);
         }
-
-//        g.setColor(PATH_COLOR);
-//        g.setStroke(new BasicStroke(3));
-//        g.drawPolyline(xs, ys, path.size());
-        canvas.drawLines(pts, 0, path.size(), PATH_COLOR);
-
     }
 }

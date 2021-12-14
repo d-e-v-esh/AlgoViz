@@ -120,7 +120,6 @@ public class PathFind extends AppCompatActivity {
         );
 
 
-        algoArrayAdapter.setDropDownViewResource(R.layout.algorithms_dropdown);
         algorithmDropdown = findViewById(R.id.algorithm_dropdown);
         algorithmDropdown.setAdapter(algoArrayAdapter);
 
