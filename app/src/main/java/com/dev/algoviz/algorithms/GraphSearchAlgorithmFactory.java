@@ -22,7 +22,7 @@ public class GraphSearchAlgorithmFactory {
     // Populates the {@link #classes} map.
     static {
         classes.put("Breadth-First Search", BreadthFirstSearch.class);
-        classes.put("Dijkstra (Uniform Cost Search)", DijkstraSearch.class);
+        classes.put("Dijkstra's Search", DijkstraSearch.class);
         classes.put("Greedy Best First Search", GreedyBestFirstSearch.class);
         classes.put("A* Search", AStarSearch.class);
     }

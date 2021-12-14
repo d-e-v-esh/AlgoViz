@@ -27,7 +27,7 @@ public class PathFind extends AppCompatActivity {
     private int currentAnimationSpeed = 40;
 
     private ProgramState programState;
-    String[] algorithmsList = {"Breadth-First Search", "Dijkstra (Uniform Cost Search)", "Greedy Best First Search", "A* Search"};
+    String[] algorithmsList = {"A* Search", "Dijkstra's Search", "Greedy Best First Search", "Breadth-First Search"};
     String[] blockTypeList = {"Wall", "Blank", "Start", "End"};
     CheckBox diagonalCheck;
     public GridView gridView;
@@ -54,7 +54,7 @@ public class PathFind extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        grid = new Grid(21, 25);
+        grid = new Grid(21, 30);
         gridView = findViewById(R.id.gridView);
         gridView.setGrid(grid);
 
