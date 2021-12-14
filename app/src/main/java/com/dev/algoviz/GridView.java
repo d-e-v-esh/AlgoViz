@@ -11,10 +11,13 @@ import android.view.View;
 import com.dev.algoviz.algorithms.IAlgorithmListener;
 import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
 
+
 public class GridView extends View {
     private Grid grid;
     private IGraphSearchAlgorithm algorithm;
     private TouchOperation touchOperation = TouchOperation.None;
+
+    int blockType = 0;
 
     public GridView(Context context) {
         super(context);
@@ -121,28 +124,35 @@ public class GridView extends View {
     }
 
 
+    public void setBlockType(int blockType) {
+        this.blockType = blockType;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Point clickedBlock = getClickedBlock(event);
+
 
         switch (event.getAction()) {
             // Merged tap and drag functions
             case MotionEvent.ACTION_DOWN:
             case DragEvent.ACTION_DRAG_LOCATION:
-
                 if (clickedBlock == null) {
                     touchOperation = TouchOperation.None;
-                } else if (grid.isBlockWall(clickedBlock)) {
-                    touchOperation = TouchOperation.DeleteWall;
-                } else {
+                } else if (blockType == 0) {
                     touchOperation = TouchOperation.PlaceWall;
+                } else if (blockType == 1) {
+                    touchOperation = TouchOperation.DeleteWall;
                 }
-                // Here we will check if the node is already a wall then we will do the delete wall operation.
-                doTouchOperation(clickedBlock);
-                invalidate();
                 break;
         }
+
+
+        doTouchOperation(clickedBlock);
+
+        invalidate();
         return true;
+
     }
 
 

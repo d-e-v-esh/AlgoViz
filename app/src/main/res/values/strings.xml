@@ -23,4 +23,6 @@
     <string name="stop">Stop</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
+    <string name="choose_block">Choose Block</string>
+    <string name="block">Block</string>
 </resources>

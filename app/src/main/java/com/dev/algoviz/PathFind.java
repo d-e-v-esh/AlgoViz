@@ -22,10 +22,13 @@ import com.google.android.material.slider.Slider;
 public class PathFind extends AppCompatActivity {
 
     private AutoCompleteTextView algorithmDropdown;
+
+    private AutoCompleteTextView blockTypeDropdown;
     private int currentAnimationSpeed = 40;
 
     private ProgramState programState;
     String[] algorithmsList = {"Breadth-First Search", "Dijkstra (Uniform Cost Search)", "Greedy Best First Search", "A* Search"};
+    String[] blockTypeList = {"Wall", "Blank"};
     CheckBox diagonalCheck;
     public GridView gridView;
     Grid grid;
@@ -56,12 +59,14 @@ public class PathFind extends AppCompatActivity {
         gridView.setGrid(grid);
         setProgramState(ProgramState.Editing);
         algorithmDropdown.setText(algorithmsList[0], false);
+        blockTypeDropdown.setText(blockTypeList[0], false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         setContentView(R.layout.activity_path_find);
 
@@ -119,10 +124,19 @@ public class PathFind extends AppCompatActivity {
         algorithmDropdown = findViewById(R.id.algorithm_dropdown);
         algorithmDropdown.setAdapter(algoArrayAdapter);
 
-
-        algoArrayAdapter.notifyDataSetChanged();
-
         algorithmDropdown.setOnItemClickListener((parent, view, position, id) -> currentAlgorithmIndex = position);
+
+        ArrayAdapter<String> blockTypeArrayAdapter = new ArrayAdapter<>(
+                PathFind.this, R.layout.block_type_dropdown, blockTypeList
+        );
+
+        blockTypeDropdown = findViewById(R.id.blockTypeDropdown);
+        blockTypeDropdown.setAdapter(blockTypeArrayAdapter);
+
+        blockTypeDropdown.setOnItemClickListener((parent, view, position, id) ->
+                gridView.setBlockType(position)
+        );
+
 
         Slider speedSlider = findViewById(R.id.speedSlider);
 
@@ -154,10 +168,6 @@ public class PathFind extends AppCompatActivity {
         });
 
         deWallButton.setOnClickListener(v -> {
-            // Removes the walls
-            // TODO: Rename FINISH to COMPLETE, Divide jobs between clear and complete buttons. There is confusion between those two.
-
-
             grid.reset();
         });
 
@@ -255,11 +265,14 @@ public class PathFind extends AppCompatActivity {
                 stepButton.setEnabled(true);
                 completeButton.setEnabled(true);
                 algorithmDropdown.setEnabled(true);
+                blockTypeDropdown.setEnabled(true);
                 deWallButton.setEnabled(true);
                 break;
 
             case Searching_AnimNotStarted:
                 grid.setLocked(true);
+                blockTypeDropdown.setEnabled(false);
+
 
                 algorithmDropdown.setEnabled(false);
                 diagonalCheck.setEnabled(false);
@@ -274,6 +287,7 @@ public class PathFind extends AppCompatActivity {
                 grid.setLocked(true);
 
 
+                blockTypeDropdown.setEnabled(false);
                 stepButton.setEnabled(true);
                 completeButton.setEnabled(true);
 
@@ -286,11 +300,11 @@ public class PathFind extends AppCompatActivity {
             case Done:
                 grid.setLocked(true);
 
-                // single stop and complete false on done
 
                 stepButton.setEnabled(false);
                 completeButton.setEnabled(false);
 
+                blockTypeDropdown.setEnabled(false);
 
                 algorithmDropdown.setEnabled(true);
                 deWallButton.setEnabled(false);
