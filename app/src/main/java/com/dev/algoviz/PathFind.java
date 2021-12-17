@@ -91,7 +91,6 @@ public class PathFind extends AppCompatActivity {
             playPauseButton.setText(R.string.play);
         });
 
-
         playPauseButton.setOnClickListener(v -> {
             switch (programState) {
                 case Editing:
