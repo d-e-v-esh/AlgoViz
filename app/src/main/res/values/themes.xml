@@ -1,17 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.AlgoViz" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+
+        <!--        Prevents dark mode being applied to the app-->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/Lime</item>
+        <item name="colorPrimary">@color/LimeGreen</item>
         <item name="colorPrimaryVariant">@color/SpringGreen</item>
-        <item name="colorOnPrimary">@color/White</item>
+        <item name="colorOnPrimary">@color/Red</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/Teal</item>
-        <item name="colorSecondaryVariant">@color/AliceBlue</item>
+        <item name="colorSecondaryVariant">@color/Green</item>
         <item name="colorOnSecondary">@color/Black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+
     </style>
 
     <style name="Theme.AlgoViz.NoActionBar">
