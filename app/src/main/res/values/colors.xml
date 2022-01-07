@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="White">#FFFFFF</color>
+
+    <color name="AlgoVizGreen1">#8FD947</color>
+    <color name="AlgoVizGreen2">#7AC968</color>
+    <color name="AlgoVizGreen3">#5BB462</color>
+    <color name="AlgoVizGreen4">#4CA456</color>
+    <color name="AlgoVizGreen5">#394141</color>
+    <color name="AlgoVizBlack">#FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>
     <color name="LightYellow">#FFFFE0</color>
     <color name="Yellow">#FFFF00</color>

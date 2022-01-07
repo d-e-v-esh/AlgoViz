@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.AlgoViz" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/Purple</item>
-        <item name="colorPrimaryVariant">@color/Red</item>
+        <item name="colorPrimary">@color/Lime</item>
+        <item name="colorPrimaryVariant">@color/SpringGreen</item>
         <item name="colorOnPrimary">@color/White</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/Teal</item>
