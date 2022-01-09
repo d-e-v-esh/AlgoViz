@@ -1,8 +1,11 @@
 package com.dev.algoviz;
 
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.dev.algoviz.algorithms.IGraphSearchAlgorithm;
 import com.dev.algoviz.graph.Node;
@@ -19,6 +22,8 @@ public class DrawAlgo {
     public static Paint FRONTIER_COLOR = new Paint();
     public static Paint REACHED_COLOR = new Paint();
     public static Paint PATH_COLOR = new Paint();
+    public static int radius = 0;
+
 
     /**
      * Paints the given algorithm. This method will paint the algorithm's reached (explored) nodes, frontier, and, if
@@ -35,10 +40,40 @@ public class DrawAlgo {
         paintNodes(algorithm.getReached(), REACHED_COLOR, canvas);
         paintNodes(algorithm.getFrontier(), FRONTIER_COLOR, canvas);
 
+
         if (algorithm.isPathFound()) {
             paintPath(algorithm.getPath(), canvas);
         }
     }
+
+    public static ValueAnimator createAnimator() {
+
+        String PROPERTY_RADIUS = "radius";
+        String PROPERTY_ROTATE = "rotate";
+
+
+        PropertyValuesHolder propertyRadius = PropertyValuesHolder.ofInt(PROPERTY_RADIUS, 0, 20);
+        PropertyValuesHolder propertyRotate = PropertyValuesHolder.ofInt(PROPERTY_ROTATE, 0, 360);
+
+        ValueAnimator animation = new ValueAnimator();
+        animation.setValues(propertyRadius, propertyRotate);
+        animation.setDuration(1000);
+
+        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+
+                radius = (int) animation.getAnimatedValue(PROPERTY_RADIUS);
+
+
+                Log.d("rad", Integer.toString(radius));
+            }
+        });
+
+        animation.start();
+        return animation;
+    }
+
 
     /**
      * Paints the given graph nodes in the given color.
@@ -48,10 +83,19 @@ public class DrawAlgo {
      * @param canvas the graphics object to use to paint the nodes.
      */
     private static void paintNodes(Collection<Node> nodes, Paint paint, Canvas canvas) {
+
         for (Node node : nodes) {
             Point p = (Point) node.getData();
 
-            canvas.drawRect(p.getX() * DrawGrid.cellWidth, p.getY() * DrawGrid.cellHeight, (p.getX() + 1) * DrawGrid.cellWidth, (p.getY() + 1) * DrawGrid.cellHeight, paint);
+
+            createAnimator().start();
+//            canvas.drawRect(p.getX() * DrawGrid.cellWidth,
+//                    p.getY() * DrawGrid.cellHeight,
+//                    (p.getX() + 1) * DrawGrid.cellWidth,
+//                    (p.getY() + 1) * DrawGrid.cellHeight,
+//                    paint);
+
+
         }
     }
 

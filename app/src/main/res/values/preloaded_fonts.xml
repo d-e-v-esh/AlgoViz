@@ -2,5 +2,9 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/bungee</item>
+        <item>@font/coda</item>
+        <item>@font/codystar</item>
+        <item>@font/megrim</item>
+        <item>@font/warnes</item>
     </array>
 </resources>

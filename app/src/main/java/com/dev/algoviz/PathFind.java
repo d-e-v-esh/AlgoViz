@@ -215,7 +215,7 @@ public class PathFind extends AppCompatActivity {
         stopTimer();
 
 
-        timer = new CountDownTimer(1000 * 1000, currentAnimationSpeed) {
+        timer = new CountDownTimer(1000 * 1000, 2000) {
             public void onTick(long millisUntilFinished) {
 
                 if (algorithm != null) {

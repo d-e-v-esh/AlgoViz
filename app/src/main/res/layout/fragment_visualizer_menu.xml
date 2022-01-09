@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="@color/WhiteSmoke"
     tools:context=".VisualizerMenuFragment">
 
 
@@ -11,24 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="More\nComing\nSoon"
-                android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.826"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.499" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="More\nComing\nSoon"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.826"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.499" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="132dp"
@@ -63,12 +61,73 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_pathfinding_icon" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!--                <com.airbnb.lottie.LottieAnimationView-->
+        <!--                    android:id="@+id/asadfsdfsiasid"-->
+        <!--                    android:layout_width="137dp"-->
+        <!--                    android:layout_height="391dp"-->
+
+
+        <!--                    android:layout_marginEnd="-50dp"-->
+
+        <!--                    android:scaleX="-1"-->
+        <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                    app:layout_constraintHorizontal_bias="1.0"-->
+        <!--                    app:layout_constraintStart_toStartOf="parent"-->
+        <!--                    app:layout_constraintTop_toTopOf="parent"-->
+        <!--                    app:layout_constraintVertical_bias="1.0"-->
+        <!--                    app:lottie_autoPlay="true"-->
+        <!--                    app:lottie_loop="true"-->
+        <!--                    app:lottie_rawRes="@raw/plantas_hojas_yaxis" />-->
+
+
+        <!--        <com.airbnb.lottie.LottieAnimationView-->
+        <!--            android:id="@+id/adfasfdsadfsdfsiasid"-->
+        <!--            android:layout_width="137dp"-->
+        <!--            android:layout_height="391dp"-->
+
+
+        <!--            android:layout_marginEnd="-50dp"-->
+
+        <!--            android:scaleX="-1"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.282"-->
+        <!--            app:lottie_autoPlay="true"-->
+        <!--            app:lottie_loop="true"-->
+        <!--            app:lottie_rawRes="@raw/plantas_hojas_yaxis" />-->
+
+        <!--        <com.airbnb.lottie.LottieAnimationView-->
+        <!--            android:id="@+id/adfasfdsadadsfdsfsdfsiasid"-->
+        <!--            android:layout_width="137dp"-->
+        <!--            android:layout_height="391dp"-->
+
+
+        <!--            android:layout_marginTop="-40dp"-->
+        <!--            android:layout_marginEnd="-50dp"-->
+        <!--            android:layout_marginBottom="-150dp"-->
+
+        <!--            android:scaleX="-1"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.0"-->
+        <!--            app:lottie_autoPlay="true"-->
+        <!--            app:lottie_loop="true"-->
+        <!--            app:lottie_rawRes="@raw/plantas_hojas_yaxis" />-->
+
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

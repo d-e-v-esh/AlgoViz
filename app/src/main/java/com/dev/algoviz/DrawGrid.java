@@ -12,9 +12,13 @@ public class DrawGrid {
     public static Paint whitePaint = new Paint();
 
     public static void drawForeground(Grid grid, Canvas canvas) {
-        greenPaint.setColor(Color.GREEN);
-        redPaint.setColor(Color.RED);
-        whitePaint.setColor(Color.WHITE);
+//        greenPaint.setColor(Color.GREEN);
+        redPaint.setColor(MainActivity.getAppContext().getResources().getColor(R.color.AlgoVizRed));
+
+        greenPaint.setColor(MainActivity.getAppContext().getResources().getColor(R.color.AlgoVizGreen3));
+//        int myColor = MainActivity.getAppContext().getResources().getColor(R.color.AlgoVizGreen3);
+//MainActivity.con
+        whitePaint.setColor(MainActivity.getAppContext().getResources().getColor(R.color.AliceBlue));
 
         Point startPoint = grid.getStartPoint();
         Point endPoint = grid.getGoalPoint();

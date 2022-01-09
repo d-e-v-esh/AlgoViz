@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
 
 
-    android:background="@color/Lime"
+    android:background="@color/WhiteSmoke"
     tools:context=".IntroFragment">
 
 
@@ -16,68 +16,70 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/centerAnimation"
+            android:layout_width="274dp"
+            android:layout_height="310dp"
+            android:layout_marginStart="-80dp"
+            android:layout_marginTop="-80dp"
+            android:scaleX="-1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.007"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/twigs_and_leaves" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/pl"
+            android:layout_width="145dp"
+            android:layout_height="135dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.424"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/plant_animation_swinging" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="383dp"
             android:layout_height="142dp"
-            android:fontFamily="@font/bungee"
-
+            android:fontFamily="@font/megrim"
             android:gravity="center"
-
             android:text="AlgoViz"
-            android:textSize="50dp"
+            android:textSize="75dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
-
+            app:layout_constraintHorizontal_bias="0.571"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.118" />
 
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/centerAnimation"
-            android:layout_width="101dp"
-            android:layout_height="101dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.812"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.404"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/rocket" />
+            android:id="@+id/green_arrow"
+            android:layout_width="413dp"
+            android:layout_height="227dp"
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/laptop_working"
-            android:layout_width="202dp"
-            android:layout_height="226dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.964"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/flying_tree" />
-
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/plantAnimation"
-            android:layout_width="113dp"
-            android:layout_height="660dp"
 
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
 
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.756"
+            app:layout_constraintVertical_bias="0.857"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/adornos_verticales" />
+            app:lottie_rawRes="@raw/new_green_arrow" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
