@@ -12,12 +12,11 @@ public class DrawGrid {
     public static Paint whitePaint = new Paint();
 
     public static void drawForeground(Grid grid, Canvas canvas) {
-//        greenPaint.setColor(Color.GREEN);
+        redPaint.setStyle(Paint.Style.FILL);
+        greenPaint.setStyle(Paint.Style.FILL);
+        whitePaint.setStyle(Paint.Style.FILL);
         redPaint.setColor(MainActivity.getAppContext().getResources().getColor(R.color.AlgoVizRed));
-
         greenPaint.setColor(MainActivity.getAppContext().getResources().getColor(R.color.AlgoVizGreen3));
-//        int myColor = MainActivity.getAppContext().getResources().getColor(R.color.AlgoVizGreen3);
-//MainActivity.con
         whitePaint.setColor(MainActivity.getAppContext().getResources().getColor(R.color.AliceBlue));
 
         Point startPoint = grid.getStartPoint();
@@ -29,12 +28,8 @@ public class DrawGrid {
     }
 
     public static void drawGridBackground(Grid grid, Canvas canvas) {
-
         paintTerrain(grid, canvas);
-
-
     }
-
 
     /**
      * Paints the grid lines of the given maze.

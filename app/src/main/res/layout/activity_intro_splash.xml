@@ -20,10 +20,7 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
         app:lottie_rawRes="@raw/algoviz_animation"
-        app:lottie_speed="4"
-
-
-        />
+        app:lottie_speed="4" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationHeadingView"
@@ -38,7 +35,6 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
         app:lottie_rawRes="@raw/animation_algoviz_heading"
-
         app:lottie_speed="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
