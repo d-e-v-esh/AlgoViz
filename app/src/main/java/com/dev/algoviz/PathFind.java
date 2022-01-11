@@ -54,14 +54,20 @@ public class PathFind extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        grid = new Grid(21, 30);
         gridView = findViewById(R.id.gridView);
-        gridView.setGrid(grid);
-
         int canvasWidth = this.gridView.getMeasuredWidth();
         int canvasHeight = this.gridView.getMeasuredHeight();
         Log.d("Canvas Width", Integer.toString(canvasWidth));
         Log.d("Canvas Height", Integer.toString(canvasHeight));
+
+        int gridWidth = (int) Math.floor(canvasWidth / DrawGrid.cellWidth);
+        int gridHeight = (int) Math.floor(canvasHeight / DrawGrid.cellHeight);
+
+        Log.d("Grid Width", Integer.toString(gridWidth));
+        Log.d("Grid Height", Integer.toString(gridHeight));
+
+        grid = new Grid(gridWidth, gridHeight);
+        gridView.setGrid(grid);
 
 
         setProgramState(ProgramState.Editing);
@@ -147,6 +153,8 @@ public class PathFind extends AppCompatActivity {
         speedSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (value == 0) {
                 currentAnimationSpeed = 300;
+
+
             }
             if (value == 300) {
                 currentAnimationSpeed = 1;
@@ -215,12 +223,17 @@ public class PathFind extends AppCompatActivity {
         stopTimer();
 
 
-        timer = new CountDownTimer(1000 * 1000, 2000) {
+        timer = new CountDownTimer(1000 * 1000, currentAnimationSpeed) {
             public void onTick(long millisUntilFinished) {
 
                 if (algorithm != null) {
 
                     boolean done = algorithm.step();
+
+
+                    // This makes it little faster.
+                    algorithm.step();
+                    algorithm.step();
                     if (done) {
                         stopTimer();
                         setProgramState(ProgramState.Done);
