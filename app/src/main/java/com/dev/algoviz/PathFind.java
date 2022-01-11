@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -55,22 +56,53 @@ public class PathFind extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         gridView = findViewById(R.id.gridView);
-        int canvasWidth = this.gridView.getMeasuredWidth();
-        int canvasHeight = this.gridView.getMeasuredHeight();
-        Log.d("Canvas Width", Integer.toString(canvasWidth));
-        Log.d("Canvas Height", Integer.toString(canvasHeight));
-
-        int gridWidth = (int) Math.floor(canvasWidth / DrawGrid.cellWidth);
-        int gridHeight = (int) Math.floor(canvasHeight / DrawGrid.cellHeight);
-
-        Log.d("Grid Width", Integer.toString(gridWidth));
-        Log.d("Grid Height", Integer.toString(gridHeight));
-
-        grid = new Grid(gridWidth, gridHeight);
-        gridView.setGrid(grid);
 
 
-        setProgramState(ProgramState.Editing);
+        gridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                // Ensure you call it only once :
+                gridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                // get size of view here
+
+                int canvasWidth = gridView.getWidth();
+                int canvasHeight = gridView.getHeight();
+                Log.d("Canvas Width", Integer.toString(canvasWidth));
+                Log.d("Canvas Height", Integer.toString(canvasHeight));
+
+
+                int gridWidth = (int) Math.floor(canvasWidth / DrawGrid.cellWidth);
+                int gridHeight = (int) Math.floor(canvasHeight / DrawGrid.cellHeight);
+
+                Log.d("Grid Width", Integer.toString(gridWidth));
+                Log.d("Grid Height", Integer.toString(gridHeight));
+
+                grid = new Grid(gridWidth, gridHeight);
+                gridView.setGrid(grid);
+
+
+                setProgramState(ProgramState.Editing);
+            }
+        });
+
+
+//        int canvasWidth = gridView.getLayoutParams().height;
+//        int canvasHeight = gridView.getLayoutParams().width;
+//        Log.d("Canvas Width", Integer.toString(canvasWidth));
+//        Log.d("Canvas Height", Integer.toString(canvasHeight));
+
+//        int gridWidth = (int) Math.floor(canvasWidth / DrawGrid.cellWidth);
+//        int gridHeight = (int) Math.floor(canvasHeight / DrawGrid.cellHeight);
+//
+//        Log.d("Grid Width", Integer.toString(gridWidth));
+//        Log.d("Grid Height", Integer.toString(gridHeight));
+//
+//        grid = new Grid(gridWidth, gridHeight);
+//        gridView.setGrid(grid);
+
+
         algorithmDropdown.setText(algorithmsList[0], false);
         blockTypeDropdown.setText(blockTypeList[0], false);
     }
