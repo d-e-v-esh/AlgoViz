@@ -16,7 +16,6 @@ public class GridView extends View {
     private Grid grid;
     private IGraphSearchAlgorithm algorithm;
     private TouchOperation touchOperation = TouchOperation.None;
-
     int blockType = 0;
 
     public GridView(Context context) {
@@ -139,10 +138,7 @@ public class GridView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Point clickedBlock = getClickedBlock(event);
-
-
         switch (event.getAction()) {
-
             // TAP and DRAG are merged under one case for now
             case MotionEvent.ACTION_DOWN:
             case DragEvent.ACTION_DRAG_LOCATION:
@@ -159,10 +155,7 @@ public class GridView extends View {
                 }
                 break;
         }
-
-
         doTouchOperation(clickedBlock);
-
         invalidate();
         return true;
 

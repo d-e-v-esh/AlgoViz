@@ -37,7 +37,6 @@ public class DrawAlgo {
         paintNodes(algorithm.getReached(), REACHED_COLOR, canvas);
         paintNodes(algorithm.getFrontier(), FRONTIER_COLOR, canvas);
 
-
         if (algorithm.isPathFound()) {
             paintPath(algorithm.getPath(), canvas);
         }
@@ -54,8 +53,6 @@ public class DrawAlgo {
 
         // I will probably need to create a new function for each node that will be responsible
         // to animate each node.
-
-
         for (Node node : nodes) {
             Point p = (Point) node.getData();
             canvas.drawRect(p.getX() * DrawGrid.cellWidth,

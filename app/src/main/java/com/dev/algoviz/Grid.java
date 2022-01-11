@@ -7,13 +7,9 @@ public class Grid {
 
 
     private final int width, height;
-
     private final TileTypes[][] tiles;
-
     private Point startPoint, goalPoint;
-
     private final List<IGridListener> mazeListeners = new ArrayList<>();
-
     private boolean isLocked;
 
     /**

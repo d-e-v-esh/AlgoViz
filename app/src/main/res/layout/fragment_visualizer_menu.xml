@@ -8,7 +8,6 @@
     android:background="@color/WhiteSmoke"
     tools:context=".VisualizerMenuFragment">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -124,8 +123,6 @@
         <!--            app:lottie_autoPlay="true"-->
         <!--            app:lottie_loop="true"-->
         <!--            app:lottie_rawRes="@raw/plantas_hojas_yaxis" />-->
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
