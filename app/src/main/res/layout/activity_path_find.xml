@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/LightYellow"
     tools:context=".PathFind">
 
 
@@ -11,19 +13,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <view
+
+        <com.dev.algoviz.GridView
             android:id="@+id/gridView"
-            class="com.dev.algoviz.GridView"
             android:layout_width="match_parent"
 
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="2.7"
             android:background="@android:color/transparent"
             android:fadingEdge="vertical"
             android:gravity="top"
             android:padding="5dp"
             android:scrollbars="vertical" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,9 +51,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/slider_desc"
-                    android:value="20.0"
-                    android:valueFrom="0.0"
-                    android:valueTo="100.0" />
+                    android:stepSize="25"
+                    android:value="150"
+                    android:valueFrom="0"
+                    android:valueTo="300"
+                    app:labelBehavior="gone" />
 
             </LinearLayout>
 
@@ -64,12 +67,50 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/startButton"
+                    android:id="@+id/playPauseButton"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/start" />
+                    android:text="@string/play" />
+
+
+                <Button
+                    android:id="@+id/stepButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/step" />
+
+
+                <Button
+                    android:id="@+id/completeButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/complete" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+
+                <Button
+                    android:id="@+id/deWall"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/deWall" />
 
                 <CheckBox
                     android:id="@+id/diagonalCheck"
@@ -78,6 +119,7 @@
                     android:layout_weight="1"
                     android:checked="false"
                     android:gravity="center|center_vertical"
+                    android:paddingLeft="-15dp"
                     android:text="@string/checkBoxLabel" />
 
 
@@ -89,26 +131,60 @@
                     android:layout_weight="1"
                     android:text="@string/reset" />
 
+
             </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-
-                android:id="@+id/algorithmMenu"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                android:layout_height="wrap_content"
-                android:hint="@string/choose_algorithm"
+                <com.google.android.material.textfield.TextInputLayout
 
-                >
-
-                <AutoCompleteTextView
-                    android:id="@+id/algorithm_dropdown"
+                    android:id="@+id/algorithmMenu"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="2"
+
+                    android:hint="@string/choose_algorithm"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="2dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/algorithm_dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        tools:ignore="TextContrastCheck" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+
+                    android:id="@+id/blockTypeMenu"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_weight="4"
+
+                    android:hint="@string/block"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="4dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/blockTypeDropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

@@ -14,4 +14,17 @@
     <string name="choose_algorithm">Choose Algorithm</string>
     <string name="start">Start</string>
     <string name="reset">Reset</string>
+    <string name="step">Step</string>
+    <string name="finish">Finish</string>
+    <string name="removeWalls">Remove Walls</string>
+    <string name="clear">Clear</string>
+    <string name="complete">Complete</string>
+    <string name="deWall">De-Wall</string>
+    <string name="stop">Stop</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="choose_block">Choose Block</string>
+    <string name="block">Block</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
