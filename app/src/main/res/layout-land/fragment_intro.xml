@@ -40,54 +40,56 @@
             android:fontFamily="@font/megrim"
             android:gravity="center"
             android:text="AlgoViz"
-            android:textSize="90dp"
+            android:textSize="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintHorizontal_bias="0.56"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.225" />
+            app:layout_constraintVertical_bias="0.475" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/pl"
+            android:id="@+id/swingingPlant"
             android:layout_width="145dp"
             android:layout_height="135dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.417"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintVertical_bias="0.684"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/plant_animation_swinging" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/dsfasfpl"
-            android:layout_width="304dp"
-            android:layout_height="313dp"
+            android:id="@+id/flyingTree"
+            android:layout_width="314dp"
+            android:layout_height="314dp"
+            android:layout_marginTop="-50dp"
+            android:layout_marginRight="-50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.631"
+            app:layout_constraintVertical_bias="0.0"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/flying_tree" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/green_arrow"
-            android:layout_width="413dp"
-            android:layout_height="227dp"
+            android:id="@+id/greenArrow"
+            android:layout_width="428dp"
+            android:layout_height="137dp"
 
 
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.936"
+            app:layout_constraintVertical_bias="1.0"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/new_green_arrow" />

@@ -6,8 +6,8 @@
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/LimeGreen</item>
-        <item name="colorPrimaryVariant">@color/SpringGreen</item>
+        <item name="colorPrimary">@color/AlgoVizGreen3</item>
+        <item name="colorPrimaryVariant">@color/AlgoVizGreen3</item>
         <item name="colorOnPrimary">@color/Red</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/Teal</item>

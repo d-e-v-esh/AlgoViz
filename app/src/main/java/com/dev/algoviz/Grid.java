@@ -7,13 +7,9 @@ public class Grid {
 
 
     private final int width, height;
-
     private final TileTypes[][] tiles;
-
     private Point startPoint, goalPoint;
-
     private final List<IGridListener> mazeListeners = new ArrayList<>();
-
     private boolean isLocked;
 
     /**
@@ -44,8 +40,8 @@ public class Grid {
             }
         }
 
-        this.startPoint = new Point(2, 2);
-        this.goalPoint = new Point(width - 10, height - 10);
+        this.startPoint = new Point(1, 1);
+        this.goalPoint = new Point(width - 2, height - 2);
 
         fireMazeChanged();
     }

@@ -19,6 +19,8 @@ public class DrawAlgo {
     public static Paint FRONTIER_COLOR = new Paint();
     public static Paint REACHED_COLOR = new Paint();
     public static Paint PATH_COLOR = new Paint();
+    public static int radius = 0;
+
 
     /**
      * Paints the given algorithm. This method will paint the algorithm's reached (explored) nodes, frontier, and, if
@@ -48,10 +50,16 @@ public class DrawAlgo {
      * @param canvas the graphics object to use to paint the nodes.
      */
     private static void paintNodes(Collection<Node> nodes, Paint paint, Canvas canvas) {
+
+        // I will probably need to create a new function for each node that will be responsible
+        // to animate each node.
         for (Node node : nodes) {
             Point p = (Point) node.getData();
-
-            canvas.drawRect(p.getX() * DrawGrid.cellWidth, p.getY() * DrawGrid.cellHeight, (p.getX() + 1) * DrawGrid.cellWidth, (p.getY() + 1) * DrawGrid.cellHeight, paint);
+            canvas.drawRect(p.getX() * DrawGrid.cellWidth,
+                    p.getY() * DrawGrid.cellHeight,
+                    (p.getX() + 1) * DrawGrid.cellWidth,
+                    (p.getY() + 1) * DrawGrid.cellHeight,
+                    paint);
         }
     }
 

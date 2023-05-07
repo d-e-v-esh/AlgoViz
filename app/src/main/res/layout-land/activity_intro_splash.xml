@@ -22,19 +22,6 @@
         app:lottie_rawRes="@raw/algoviz_animation"
         app:lottie_speed="4" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationHeadingView"
-        android:layout_width="342dp"
-        android:layout_height="190dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.835"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="false"
-        app:lottie_rawRes="@raw/animation_algoviz_heading"
-        app:lottie_speed="0.8" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
